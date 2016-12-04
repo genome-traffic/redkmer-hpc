@@ -10,7 +10,7 @@ module load samtools
 
 printf "======= merge all pacbio mappings  =======\n"
 
-sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
+ls $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | sort -m | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
 sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
 
 printf "======= calculating library sizes =======\n"
