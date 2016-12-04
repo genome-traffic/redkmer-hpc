@@ -45,7 +45,7 @@ for i in $(eval echo "{1..$NODES}")
 	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $pacM > ${pacDIR}/${i}_m_pac.fasta
 
 
-cat > ${CWD}/qsubscripts/malepacbins${i}.bash <<EOF
+cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_mworker
 #PBS -l walltime=72:00:00
@@ -63,19 +63,13 @@ module load bowtie/1.1.1
 		cp $illM XXXXX
 		$BOWTIE -a -t -p $CORES -v 0 XXXXX/${i}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXX/m.fastq 1> XXXXX/male.txt 2> $CWD/pacBio_illmapping/logs/${i}_male_log.txt
 	echo "==================================== Done male pacbins, sorting for chunck ${i} ===================================="
-		split --number=l/$CORES XXXXX/male.txt XXXXX/_sorttmp;
-		ls -1 XXXXX/_sorttmp* | (while read SORTFILE; do sort -k1b,1 -T XXXXX/temp YYYYY -o YYYYY & done;
-		wait
-		)
-		sort -m XXXXX/_sorttmp* | uniq -c > XXXXX/male_uniq
-		cp XXXXX/male_uniq $CWD/pacBio_illmapping/mapping_rawdata/${i}_male_uniq
+		sort -k1b,1 -T XXXXX XXXXX/male.txt -o $CWD/pacBio_illmapping/mapping_rawdata/${i}_male_uniq
 	echo "==================================== Done sorting chunk ${i} ! ===================================="
 EOF
 
-sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malepacbins${i}.bash > ${CWD}/qsubscripts/malepacbins${i}.bashX
-sed 's/YYYYY/$SORTFILE/g' ${CWD}/qsubscripts/malepacbins${i}.bashX > ${CWD}/qsubscripts/malepacbins${i}.bash
+	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malepacbins${i}.bashX > ${CWD}/qsubscripts/malepacbins${i}.bash
 
-cat > ${CWD}/qsubscripts/femalepacbins${i}.bash <<EOF
+cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_fworker
 #PBS -l walltime=72:00:00
@@ -93,17 +87,11 @@ module load bowtie/1.1.1
 		cp $illF XXXXX
 		$BOWTIE -a -t -p $CORES -v 0 XXXXX/${i}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXX/f.fastq 1> XXXXX/female.txt 2> $CWD/pacBio_illmapping/logs/${i}_female_log.txt
 	echo "==================================== Done female pacbins, sorting ===================================="
-		split --number=l/$CORES XXXXX/female.txt XXXXX/_sorttmp;
-		ls -1 XXXXX/_sorttmp* | (while read SORTFILE; do sort -k1b,1 -T XXXXX/temp YYYYY -o YYYYY & done;
-		wait
-		)
-		sort -m XXXXX/_sorttmp* | uniq -c > XXXXX/female_uniq
-		cp XXXXX/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/${i}_female_uniq
+		sort -k1b,1 -T XXXXX XXXXX/female.txt -o $CWD/pacBio_illmapping/mapping_rawdata/${i}_female_uniq
 	echo "==================================== Done sorting ! ===================================="
 EOF
 
-	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalepacbins${i}.bash > ${CWD}/qsubscripts/femalepacbins${i}.bashX
-	sed 's/YYYYY/$SORTFILE/g' ${CWD}/qsubscripts/femalepacbins${i}.bashX > ${CWD}/qsubscripts/femalepacbins${i}.bash
+	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalepacbins${i}.bashX > ${CWD}/qsubscripts/femalepacbins${i}.bash
 
 	ALLMJOBS[${i}]=$(qsub ${CWD}/qsubscripts/malepacbins${i}.bash)
 	ALLFJOBS[${i}]=$(qsub ${CWD}/qsubscripts/femalepacbins${i}.bash)
@@ -113,23 +101,23 @@ EOF
 
 done
 
-ALLJOBSDONE=false
-while [ ! ${ALLJOBSDONE} ];do
-ALLJOBSDONE=true
+JOBSR=true
+while [ ${JOBSR} ];do
+JOBSR=false
 	echo "================== Checking for jobs.... =========================" 
 	for m in "${ALLMJOBS[@]}"
 	do
-		if [ qstat ${m} &> /dev/null ] ; then
+		if [ ! qstat ${m} &> /dev/null ] ; then
 		echo ${m}
-		ALLJOBSDONE=false
+		JOBSR=true
 		fi
 	done
 
 	for m in "${ALLFJOBS[@]}"
 	do
-		if [ qstat ${m} &> /dev/null ] ; then
+		if [ ! qstat ${m} &> /dev/null ] ; then
 		echo ${m}
-		ALLJOBSDONE=false
+		JOBSR=true
 		fi
 	done
 
