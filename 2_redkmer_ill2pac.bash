@@ -1,16 +1,16 @@
 #!/bin/bash
 #PBS -N redkmer2
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=16gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=4gb
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 
-NODES=10
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
 module load bowtie/1.1.1
 module load bowtie
 
+rm $CWD/pacBio_illmapping/mapping_rawdata/*uniq
 ALLMJOBS=()
 ALLFJOBS=()
 
@@ -47,11 +47,11 @@ for i in $(eval echo "{1..$NODES}")
 
 cat > ${CWD}/qsubscripts/malepacbins${i}.bash <<EOF
 #!/bin/bash
-#PBS -N redkmer_m_pacb
+#PBS -N redkmer_mworker
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=500gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=3gb
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 module load bowtie/1.1.1
 	echo "==================================== Indexing male chunk ${i} ======================================="
 		cp ${pacDIR}/${i}_m_pac.fasta XXXXX
@@ -77,11 +77,11 @@ sed 's/YYYYY/$SORTFILE/g' ${CWD}/qsubscripts/malepacbins${i}.bashX > ${CWD}/qsub
 
 cat > ${CWD}/qsubscripts/femalepacbins${i}.bash <<EOF
 #!/bin/bash
-#PBS -N redkmer_f_pacb
+#PBS -N redkmer_fworker
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=500gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=3gb
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 module load bowtie/1.1.1
 	echo "==================================== Indexing female chunk ${i} ======================================="
 		cp ${pacDIR}/${i}_m_pac.fasta XXXXX
@@ -91,14 +91,14 @@ module load bowtie/1.1.1
 		#cp XXXXX/*ebwtl $CWD/pacBio_illmapping/index/  2>/dev/null || :
 	echo "==================================== Working on female pacbins ======================================="
 		cp $illF XXXXX
-		$BOWTIE -a -t -p $CORES -v 0 XXXXX/${i}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXX/f.fastq 1> XXXXX/female.txt 2> $CWD/pacBio_illmapping/logs/female_log.txt
+		$BOWTIE -a -t -p $CORES -v 0 XXXXX/${i}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXX/f.fastq 1> XXXXX/female.txt 2> $CWD/pacBio_illmapping/logs/${i}_female_log.txt
 	echo "==================================== Done female pacbins, sorting ===================================="
 		split --number=l/$CORES XXXXX/female.txt XXXXX/_sorttmp;
 		ls -1 XXXXX/_sorttmp* | (while read SORTFILE; do sort -k1b,1 -T XXXXX/temp YYYYY -o YYYYY & done;
 		wait
 		)
 		sort -m XXXXX/_sorttmp* | uniq -c > XXXXX/female_uniq
-		cp XXXXX/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
+		cp XXXXX/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/${i}_female_uniq
 	echo "==================================== Done sorting ! ===================================="
 EOF
 
@@ -116,10 +116,11 @@ done
 ALLJOBSDONE=false
 while [ ! ${ALLJOBSDONE} ];do
 ALLJOBSDONE=true
-
+	echo "================== Checking for jobs.... =========================" 
 	for m in "${ALLMJOBS[@]}"
 	do
 		if [ qstat ${m} &> /dev/null ] ; then
+		echo ${m}
 		ALLJOBSDONE=false
 		fi
 	done
@@ -127,6 +128,7 @@ ALLJOBSDONE=true
 	for m in "${ALLFJOBS[@]}"
 	do
 		if [ qstat ${m} &> /dev/null ] ; then
+		echo ${m}
 		ALLJOBSDONE=false
 		fi
 	done

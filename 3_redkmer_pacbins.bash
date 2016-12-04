@@ -1,13 +1,17 @@
 #!/bin/bash
 #PBS -N redkmer3
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=16gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=4gb
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
 
+printf "======= merge all pacbio mappings  =======\n"
+
+sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
+sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
 
 printf "======= calculating library sizes =======\n"
 
@@ -85,8 +89,6 @@ cat $CWD/pacBio_bins/X_reads | xargs $SAMTOOLS faidx $pacM > $CWD/pacBio_bins/fa
 cat $CWD/pacBio_bins/A_reads | xargs $SAMTOOLS faidx $pacM > $CWD/pacBio_bins/fasta/Abin.fasta
 cat $CWD/pacBio_bins/Y_reads | xargs $SAMTOOLS faidx $pacM > $CWD/pacBio_bins/fasta/Ybin.fasta
 cat $CWD/pacBio_bins/GA_reads | xargs $SAMTOOLS faidx $pacM > $CWD/pacBio_bins/fasta/GAbin.fasta
-
-
 
 echo "==================================== Done step 3! ======================================="
 		
