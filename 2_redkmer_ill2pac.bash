@@ -52,6 +52,7 @@ cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #PBS -l select=1:ncpus=12:mem=8gb:tmpspace=3gb
 #PBS -e /home/nikiwind/reports/redkmer-hpc
 #PBS -o /home/nikiwind/reports/redkmer-hpc
+
 module load bowtie/1.1.1
 	echo "==================================== Indexing male chunk ${i} ======================================="
 		cp ${pacDIR}/${i}_m_pac.fasta XXXXX
@@ -76,6 +77,7 @@ cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #PBS -l select=1:ncpus=12:mem=8gb:tmpspace=3gb
 #PBS -e /home/nikiwind/reports/redkmer-hpc
 #PBS -o /home/nikiwind/reports/redkmer-hpc
+
 module load bowtie/1.1.1
 	echo "==================================== Indexing female chunk ${i} ======================================="
 		cp ${pacDIR}/${i}_m_pac.fasta XXXXX
@@ -105,7 +107,7 @@ printf "%s\n" "${ALLMJOBS[@]}" > $CWD/pacBio_illmapping/logs/ALLMJOBS.txt
 printf "%s\n" "${ALLFJOBS[@]}" > $CWD/pacBio_illmapping/logs/ALLFJOBS.txt
 
 JOBSR=true
-while [ ${JOBSR} ];do
+while [ "${JOBSR}" = "true" ];do
 JOBSR=false
 	echo "================== Checking for jobs.... =========================" 
 	for m in "${ALLMJOBS[@]}"
