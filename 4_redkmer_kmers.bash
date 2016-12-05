@@ -2,8 +2,8 @@
 #PBS -N redkmer4
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -20,8 +20,8 @@ cat > ${CWD}/qsubscripts/femalejelly.bashX <<EOF
 #PBS -N redkmer_f_jf
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 module load jellyfish
 
 cp $illF XXXXX
@@ -40,8 +40,8 @@ cat > ${CWD}/qsubscripts/malejelly.bashX <<EOF
 #PBS -N redkmer_m_jf
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 module load jellyfish
 
 cp $illM XXXXX
@@ -55,21 +55,18 @@ EOF
 sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malejelly.bashX > ${CWD}/qsubscripts/malejelly.bash
 
 
-	JMALEJOB=$(qsub ${CWD}/qsubscripts/malejelly.bash)
+JMALEJOB=$(qsub ${CWD}/qsubscripts/malejelly.bash)
 	echo $JMALEJOB
-	JFEMALEJOB=$(qsub ${CWD}/qsubscripts/femalejelly.bash)
+JFEMALEJOB=$(qsub ${CWD}/qsubscripts/femalejelly.bash)
 	echo $JFEMALEJOB	
 	
-	while qstat $JFEMALEJOB &> /dev/null; do
-	    sleep 10;
-	done;
+while qstat $JFEMALEJOB &> /dev/null; do
+	    sleep 5;
+done;
 
-	while qstat $JMALEJOB &> /dev/null; do
-	    sleep 10;
-	done;
-
-fi
-
+while qstat $JMALEJOB &> /dev/null; do
+	    sleep 5;
+done;
 
 
 printf "======= merging kmer libraries =======\n"

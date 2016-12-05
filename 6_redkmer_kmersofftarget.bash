@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -N redkmer5
+#PBS -N redkmer6
 #PBS -l walltime=02:00:00
 #PBS -l select=1:ncpus=16:mem=16gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -25,14 +25,14 @@ fi
 cat $CWD/kmers/bowtie/offtargets/Abin.txt $CWD/kmers/bowtie/offtargets/Ybin.txt $CWD/kmers/bowtie/offtargets/GAbin.txt | sort -k1b,1 -T $CWD/temp --buffer-size=$BUFFERSIZE | uniq -c | awk '{print $2, $1}' > $CWD/kmers/bowtie/offtargets/kmer_hits_AYGAbin
 
 sed '1d' $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile
-join -a1 -a2 -1 1 -2 1 -o '0,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,2.10,2.11,2.12,2.13,1.2' -e "0" $CWD/kmers/bowtie/offtargets/kmer_hits_AYGAbin tmpfile > $CWD/kmers/kmer_results.txt; rm tmpfile
+join -a1 -a2 -1 1 -2 1 -o '0,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,2.10,2.11,2.12,2.13,1.2' -e "0" $CWD/kmers/bowtie/offtargets/kmer_hits_AYGAbin $TMPDIR/tmpfile > $CWD/kmers/kmer_results.txt; rm $TMPDIR/tmpfile
 
 printf "======= generating kmers_all_results_withofftargets file =======\n"
 
 awk -v OFS="\t" '$1=$1' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/kmer_results.txt
 
 #Add column header
-awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold\tofftargets"} {print}' $CWD/kmers/kmer_results.txt > tmpfile; mv tmpfile $CWD/kmers/kmer_results.txt
+awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold\tofftargets"} {print}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/kmer_results.txt
 
-printf "======= done step 5 =======\n"
+printf "======= done step 6 =======\n"
 

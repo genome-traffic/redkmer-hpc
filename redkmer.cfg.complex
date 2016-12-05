@@ -6,16 +6,16 @@ printf "======= Running Redkmer =======\n"
 
 # path to the working directories
 #BASEDIR=/media/nikolai/DATADRIVE1/BioTools/redkmer
-BASEDIR=/work/nikiwind/redkmer
+BASEDIR=/work/nikiwind/redkmer-hpc
 
-CWD=/work/nikiwind/redkmer/simulateddatasets/complex
+CWD=/work/nikiwind/redkmer-hpc/simulateddatasets/complex
 
 # path to the male pacbio data
-pacDIR=/work/nikiwind/redkmer/simulateddatasets/complex/testreadspac
+pacDIR=/work/nikiwind/redkmer-hpc/simulateddatasets/complex/testreadspac
 pacM=${pacDIR}/m_pac.fasta
 
 # path to the illumina data
-illDIR=/work/nikiwind/redkmer/simulateddatasets/complex/testreadsill
+illDIR=/work/nikiwind/redkmer-hpc/simulateddatasets/complex/testreadsill
 illM=${illDIR}/m.fastq
 illF=${illDIR}/f.fastq
 
@@ -52,6 +52,7 @@ echo "ymax <-"$ymax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
 #---------------------------------- Machine specific configuration ---------------------------------------------------------------
 
 # number of CPUs and memory to use
+NODES=6
 CORES=16
 BUFFERSIZE=10G
 

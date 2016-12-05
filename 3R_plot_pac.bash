@@ -1,9 +1,9 @@
 #!/bin/bash
-#PBS -N redkmer2R
+#PBS -N redkmer3R
 #PBS -l walltime=02:00:00
 #PBS -l select=1:ncpus=16:mem=16gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -e /home/nikiwind/reports/redkmer-hpc
+#PBS -o /home/nikiwind/reports/redkmer-hpc
 
 module purge
 module load R
