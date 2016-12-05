@@ -101,13 +101,16 @@ EOF
 
 done
 
+printf "%s\n" "${ALLMJOBS[@]}" > $CWD/pacBio_illmapping/logs/ALLMJOBS.txt
+printf "%s\n" "${ALLFJOBS[@]}" > $CWD/pacBio_illmapping/logs/ALLFJOBS.txt
+
 JOBSR=true
 while [ ${JOBSR} ];do
 JOBSR=false
 	echo "================== Checking for jobs.... =========================" 
 	for m in "${ALLMJOBS[@]}"
 	do
-		if [ ! qstat ${m} &> /dev/null ] ; then
+		if qstat ${m} &> /dev/null; then
 		echo ${m}
 		JOBSR=true
 		fi
@@ -115,12 +118,11 @@ JOBSR=false
 
 	for m in "${ALLFJOBS[@]}"
 	do
-		if [ ! qstat ${m} &> /dev/null ] ; then
+		if qstat ${m} &> /dev/null; then
 		echo ${m}
 		JOBSR=true
 		fi
 	done
-
 done;
 
 
