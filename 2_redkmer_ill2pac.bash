@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer2
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=4gb
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=200gb
 #PBS -e /home/nikiwind/reports/redkmer-hpc
 #PBS -o /home/nikiwind/reports/redkmer-hpc
 
@@ -49,7 +49,7 @@ cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_mworker
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=3gb
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=600gb
 #PBS -e /home/nikiwind/reports/redkmer-hpc
 #PBS -o /home/nikiwind/reports/redkmer-hpc
 
@@ -63,6 +63,7 @@ module load bowtie/1.1.1
 	echo "==================================== Working on male pacbins chunk ${i} ======================================="
 		cp $illM XXXXX
 		$BOWTIE -a -t -p $CORES -v 0 XXXXX/${i}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXX/m.fastq 1> XXXXX/male.txt 2> $CWD/pacBio_illmapping/logs/${i}_male_log.txt
+		rm XXXXX/m.fastq
 	echo "==================================== Done male pacbins, sorting for chunck ${i} ===================================="
 		sort -k1b,1 -T XXXXX XXXXX/male.txt -o $CWD/pacBio_illmapping/mapping_rawdata/${i}_male_uniq
 	echo "==================================== Done sorting chunk ${i} ! ===================================="
@@ -74,7 +75,7 @@ cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_fworker
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=3gb
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=600gb
 #PBS -e /home/nikiwind/reports/redkmer-hpc
 #PBS -o /home/nikiwind/reports/redkmer-hpc
 
@@ -88,6 +89,7 @@ module load bowtie/1.1.1
 	echo "==================================== Working on female pacbins ======================================="
 		cp $illF XXXXX
 		$BOWTIE -a -t -p $CORES -v 0 XXXXX/${i}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXX/f.fastq 1> XXXXX/female.txt 2> $CWD/pacBio_illmapping/logs/${i}_female_log.txt
+		rm XXXXX/f.fastq
 	echo "==================================== Done female pacbins, sorting ===================================="
 		sort -k1b,1 -T XXXXX XXXXX/female.txt -o $CWD/pacBio_illmapping/mapping_rawdata/${i}_female_uniq
 	echo "==================================== Done sorting ! ===================================="

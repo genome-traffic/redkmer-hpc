@@ -6,7 +6,7 @@ printf "======= Running Redkmer =======\n"
 
 # path to the working directories
 #BASEDIR=/media/nikolai/DATADRIVE1/BioTools/redkmer
-BASEDIR=/work/nikiwind/redkmer
+BASEDIR=/work/nikiwind/redkmer-hpc
 
 CWD=/work/nikiwind/redkmerdatasets/ceratitis
 
@@ -52,8 +52,9 @@ echo "ymax <-"$ymax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
 #---------------------------------- Machine specific configuration ---------------------------------------------------------------
 
 # number of CPUs and memory to use
+NODES=8
 CORES=24
-BUFFERSIZE=10G
+BUFFERSIZE=16G
 
 # setting default paths to the tool-binaries
 BOWTIE=bowtie

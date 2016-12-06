@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer1
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=5gb
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
 #PBS -e /home/nikiwind/reports/redkmer-hpc
 #PBS -o /home/nikiwind/reports/redkmer-hpc
 
@@ -46,7 +46,7 @@ cat > ${CWD}/qsubscripts/femalemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_f_mito
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=2gb
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=400gb
 #PBS -e /home/nikiwind/reports
 #PBS -o /home/nikiwind/reports
 
@@ -70,7 +70,7 @@ cat > ${CWD}/qsubscripts/malemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_m_mito
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=8gb:tmpspace=2gb
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=400gb
 #PBS -e /home/nikiwind/reports
 #PBS -o /home/nikiwind/reports
 
