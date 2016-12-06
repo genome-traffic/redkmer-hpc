@@ -2,19 +2,10 @@
 #PBS -N redkmer7
 #PBS -l walltime=10:00:00
 #PBS -l select=1:ncpus=24:mem=32gb
-#PBS -e /home/nikiwind/reports/redkmer-hpc
-#PBS -o /home/nikiwind/reports/redkmer-hpc
 
-if [ -z ${PBS_ENVIRONMENT+x} ]
-then
-echo "---> running on the Perugia numbercruncher..."
-source redkmer.cfg
-else
-echo "---> running on HPC cluster..."
 source $PBS_O_WORKDIR/redkmer.cfg
 module load blast+
 module load samtools
-fi
 
 printf "======= making fasta file from targetXkmers =======\n"
 

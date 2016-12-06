@@ -14,7 +14,7 @@ kmer$candidate[kmer$CQ<xmin]<-"A"
 kmer$candidate[kmer$CQ<ymax]<-"Y"
 kmer$candidate[kmer$CQ>=xmax]<-"GA"
 kmer$label<-kmer$hits_threshold
-kmer$label[kmer$offtargets>0]<-"offtargets"
+kmer$label[kmer$sum_offtargets>0]<-"offtargets"
 kmer$candidate<-as.factor(kmer$candidate)
 
 kmer$hits_threshold<-as.factor(kmer$hits_threshold)
@@ -26,7 +26,7 @@ summary(kmer$sum)
 kmersX<-subset(kmer,kmer$hits_threshold=="pass")
 selectSum<-as.numeric(quantile(kmersX$sum,c(.995)))
 kmer$selection<-"bad candidates"
-kmer$selection[kmer$sum>selectSum & kmer$CQ>1.5 & kmer$hits_threshold=="pass" & kmer$offtargets<1 ]<-"good kmers"
+kmer$selection[kmer$sum>selectSum & kmer$CQ>1.5 & kmer$hits_threshold=="pass"]<-"good kmers"
 kmer$selection<-as.factor(kmer$selection)
 
 candidateXkmers<-subset(kmer,kmer$selection=="good kmers")

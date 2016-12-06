@@ -14,7 +14,7 @@ REDKMERSTEP5=$(qsub -W depend=afterany:$REDKMERSTEP4 5_redkmer_kmersbowtie.bash)
 	
 REDKMERSTEP6=$(qsub -W depend=afterany:$REDKMERSTEP5 6_redkmer_kmersofftarget.bash)
 
-	REDKMERSTEP6R=$(qsub -W depend=afterany:$REDKMERSTEP6 5R_submission.bash)
+	REDKMERSTEP6R=$(qsub -W depend=afterany:$REDKMERSTEP6 6R_plot_kmers.bash)
 
 REDKMERSTEP7=$(qsub -W depend=afterany:$REDKMERSTEP6R 7_redkmer_blast2genome.bash)
 
