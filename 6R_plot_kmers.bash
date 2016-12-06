@@ -1,7 +1,7 @@
 #!/bin/bash
-#PBS -N redkmer5R
-#PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=16:mem=16gb
+#PBS -N redkmer6R
+#PBS -l walltime=10:00:00
+#PBS -l select=1:ncpus=24:mem=32gb
 #PBS -e /home/nikiwind/reports
 #PBS -o /home/nikiwind/reports
 

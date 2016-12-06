@@ -1,9 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer5
-#PBS -l walltime=02:00:00
-#PBS -l select=1:ncpus=16:mem=16gb
-#PBS -e /home/nikiwind/reports/redkmer-hpc
-#PBS -o /home/nikiwind/reports/redkmer-hpc
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=32gb
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -22,8 +20,8 @@ printf "======= Creating bowtie index for PacBio bins =======\n"
 		$BOWTIEB $TMPDIR/GAbin.fasta $TMPDIR/GAbin
 	fi
 
-	#cp $TMPDIR/*ebwt $CWD/kmers/bowtie/index 2>/dev/null || :
-	#cp $TMPDIR/*ebwtl $CWD/kmers/bowtie/index 2>/dev/null || :
+	cp $TMPDIR/*ebwt $CWD/kmers/bowtie/index 2>/dev/null || :
+	cp $TMPDIR/*ebwtl $CWD/kmers/bowtie/index 2>/dev/null || :
 
 	printf "======= Running bowtie against X chromosome bin =======\n"
 	$BOWTIE -a -t -p $CORES -v 0 $TMPDIR/Xbin --suppress 2,3,4,5,6,7,8,9 -f $kmers  1> $TMPDIR/Xbin.txt 2> $CWD/kmers/bowtie/mapping/logs/Xbin_log.txt

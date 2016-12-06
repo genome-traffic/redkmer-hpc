@@ -2,8 +2,6 @@
 #PBS -N redkmer2
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=200gb
-#PBS -e /home/nikiwind/reports/redkmer-hpc
-#PBS -o /home/nikiwind/reports/redkmer-hpc
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -49,9 +47,7 @@ cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_mworker
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=600gb
-#PBS -e /home/nikiwind/reports/redkmer-hpc
-#PBS -o /home/nikiwind/reports/redkmer-hpc
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
 
 module load bowtie/1.1.1
 	echo "==================================== Indexing male chunk ${i} ======================================="
@@ -75,9 +71,7 @@ cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_fworker
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=600gb
-#PBS -e /home/nikiwind/reports/redkmer-hpc
-#PBS -o /home/nikiwind/reports/redkmer-hpc
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
 
 module load bowtie/1.1.1
 	echo "==================================== Indexing female chunk ${i} ======================================="

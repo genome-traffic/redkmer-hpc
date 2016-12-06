@@ -2,8 +2,6 @@
 #PBS -N redkmer1
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports/redkmer-hpc
-#PBS -o /home/nikiwind/reports/redkmer-hpc
 
 echo "========== starting up step 1 =========="
 
@@ -47,8 +45,6 @@ cat > ${CWD}/qsubscripts/femalemito.bashX <<EOF
 #PBS -N redkmer_f_mito
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=64gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
 
 module load bowtie/1.1.1
 module load fastqc
@@ -71,8 +67,6 @@ cat > ${CWD}/qsubscripts/malemito.bashX <<EOF
 #PBS -N redkmer_m_mito
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=64gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
 
 module load bowtie/1.1.1
 module load fastqc
