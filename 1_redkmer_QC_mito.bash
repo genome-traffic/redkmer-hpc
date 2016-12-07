@@ -8,6 +8,8 @@ echo "========== starting up step 1 =========="
 source $PBS_O_WORKDIR/redkmer.cfg
 module load bowtie/1.1.1
 module load bowtie
+module load samtools
+
 
 echo "========== setting up directories =========="
 
@@ -95,6 +97,10 @@ sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malemito.bashX > ${CWD}/qsubscripts/m
 	while qstat $MMALEJOB &> /dev/null; do
 	    sleep 10;
 	done;
+
+echo "========== filtering pacBio libary by read length =========="
+$SAMTOOLS faidx ${pacDIR}/raw_pac.fasta
+awk -v pl="$pac_length" '{if($2>=pl)print $1}' ${pacDIR}/raw_pac.fasta.fai | xargs samtools faidx ${pacDIR}/raw_pac.fasta > ${pacDIR}/m_pac.fasta
 
 printf "======= Done step 1 =======\n"
 
