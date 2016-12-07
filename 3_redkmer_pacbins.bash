@@ -8,8 +8,13 @@ module load samtools
 
 printf "======= merge all pacbio mappings  =======\n"
 
-cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | awk '{print $2, $1}' > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
-cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | awk '{print $2, $1}' > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
+cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq |awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/female_unsort
+cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq |awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/male_unsort
+
+time sort -k1b,1  -T $CWD/temp --buffer-size=5G $CWD/pacBio_illmapping/mapping_rawdata/female_unsort > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
+time sort -k1b,1  -T $CWD/temp --buffer-size=5G $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
+
+rm $CWD/pacBio_illmapping/mapping_rawdata/*_unsort
 
 #sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
 #sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
@@ -22,7 +27,7 @@ illnorm=$((($illLIBMsize+$illLIBFsize)/2))
 
 printf "======= merging female and male pacBio_illmapping =======\n"
 
-join -a1 -a2 -1 2 -2 2 -o '0,1.1,2.1' -e "0" $CWD/pacBio_illmapping/mapping_rawdata/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/male_uniq > $CWD/pacBio_illmapping/mapping_rawdata/merge
+join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $CWD/pacBio_illmapping/mapping_rawdata/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/male_uniq > $CWD/pacBio_illmapping/mapping_rawdata/merge
 
 printf "======= normalizing to library size =======\n"
 awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*fema/le), ($3*ma/le)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
