@@ -10,7 +10,6 @@ module load bowtie/1.1.1
 module load bowtie
 module load samtools
 
-
 echo "========== setting up directories =========="
 
 mkdir -p $CWD/qsubscripts
@@ -43,8 +42,9 @@ awk -v pl="$pac_length" '{if($2>=pl)print $1}' ${pacDIR}/raw_pac.fasta.fai | xar
 
 echo "========== filtering for mitochondiral reads =========="
 
-$BOWTIEB $MtREF ${CWD}/MitoIndex/MtRef
-#$BOWTIE2B $MtREF $CWD/MitoIndex/MtRef_bowtie2
+#$BOWTIEB $MtREF ${CWD}/MitoIndex/MtRef
+$BOWTIE2B $MtREF ${CWD}/MitoIndex/MtRef_bowtie2
+
 
 cat > ${CWD}/qsubscripts/femalemito.bashX <<EOF
 #!/bin/bash
@@ -60,8 +60,8 @@ cp ${illDIR}/raw_f.fastq XXXXX/raw_f.fastq
 echo "========== producing quality report for female illumina library =========="
 $FASTQC XXXXX/raw_f.fastq -o ${CWD}/QualityReports
 echo "========== removing female illumina reads mapping to mitochondrial DNA =========="
-$BOWTIE -p $CORES $CWD/MitoIndex/MtRef XXXXX/raw_f.fastq --un XXXXX/f.fastq 2> ${illDIR}/f_bowtie.log
-#$BOWTIE2 -p $CORES -x $CWD/MitoIndex/MtRef_bowtie2 XXXXX/raw_f.fastq --un XXXXX/f.fastq 2> ${CWD}/${illDIR}/f_bowtie2.log
+#$BOWTIE -p $CORES $CWD/MitoIndex/MtRef XXXXX/raw_f.fastq --un XXXXX/f.fastq 2> ${illDIR}/f_bowtie.log
+$BOWTIE2 -p $CORES -x $CWD/MitoIndex/MtRef_bowtie2 -U XXXXX/raw_f.fastq --un XXXXX/f.fastq 2> ${CWD}/${illDIR}/f_bowtie2.log
 cp XXXXX/f.fastq ${illDIR}
 	
 EOF
@@ -82,8 +82,8 @@ cp ${illDIR}/raw_m.fastq XXXXX/raw_m.fastq
 echo "========== producing quality report for male illumina library =========="
 $FASTQC XXXXX/raw_m.fastq -o ${CWD}/QualityReports
 echo "========== removing male illumina reads mapping to mitochondrial DNA =========="
-$BOWTIE -p $CORES $CWD/MitoIndex/MtRef XXXXX/raw_m.fastq --un XXXXX/m.fastq 2> ${illDIR}/m_bowtie.log
-#$BOWTIE2 -p $CORES -x $CWD/MitoIndex/MtRef_bowtie2 XXXXX/raw_m.fastq --un XXXXX/m.fastq 2> ${CWD}/${illDIR}/m_bowtie2.log
+#$BOWTIE -p $CORES $CWD/MitoIndex/MtRef XXXXX/raw_m.fastq --un XXXXX/m.fastq 2> ${illDIR}/m_bowtie.log
+$BOWTIE2 -p $CORES -x $CWD/MitoIndex/MtRef_bowtie2 -U XXXXX/raw_m.fastq --un XXXXX/m.fastq 2> ${CWD}/${illDIR}/m_bowtie2.log
 cp XXXXX/m.fastq ${illDIR}
 	
 EOF

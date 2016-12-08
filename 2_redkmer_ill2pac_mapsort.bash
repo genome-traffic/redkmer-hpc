@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer2
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=100gb
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=200gb
 
 
 rm -f $CWD/pacBio_illmapping/mapping_rawdata/*
@@ -44,7 +44,7 @@ for i in $(eval echo "{1..$NODES}")
 cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_mworker
-#PBS -l walltime=12:00:00
+#PBS -l walltime=24:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=850gb
 
 module load bowtie/1.1.1
@@ -70,7 +70,7 @@ module load intel-suite
 		./count XXXXX/male.txt > XXXXX/${i}_male_uniq
 		cp XXXXX/${i}_male_uniq $CWD/pacBio_illmapping/mapping_rawdata/
 
-	echo "==================================== Done sorting chunk ${i} ! ===================================="
+	echo "==================================== Done male chunk ${i} ! ===================================="
 EOF
 
 	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malepacbins${i}.bashX > ${CWD}/qsubscripts/malepacbins${i}.bash
@@ -79,7 +79,7 @@ EOF
 cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_fworker
-#PBS -l walltime=12:00:00
+#PBS -l walltime=24:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=850gb
 
 module load bowtie/1.1.1
@@ -104,7 +104,7 @@ module load intel-suite
 		./count XXXXX/female.txt > XXXXX/${i}_female_uniq
 		cp XXXXX/${i}_female_uniq $CWD/pacBio_illmapping/mapping_rawdata/
 
-	echo "==================================== Done sorting ! ===================================="
+	echo "==================================== Done female chunk ${i} ! ===================================="
 EOF
 
 	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalepacbins${i}.bashX > ${CWD}/qsubscripts/femalepacbins${i}.bash
