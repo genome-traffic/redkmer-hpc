@@ -70,9 +70,9 @@ medianlength=$(awk '{print $2}' $pacM.lengths | sort -n | awk '
 
 awk -v ml="$medianlength" '{print $0, ($6 / $2 * ml)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
 
-printf "======= filter length and LSum (>=2000bp and LSum>=50)  =======\n"
+printf "======= filter LSum (LSum>=50)  =======\n"
 
-awk -v pl="$pac_length" '{if($2>=pl)print $0}' $CWD/pacBio_illmapping/mapping_rawdata/merge | awk -v ls="$LSum" '{if ($7>=ls) print $0}' > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge 
+awk -v ls="$LSum" '{if ($7>=ls) print $0}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge 
 
 # Replace space with tabs
 awk -v OFS="\t" '$1=$1' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
