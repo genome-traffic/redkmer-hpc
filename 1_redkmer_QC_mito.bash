@@ -36,8 +36,12 @@ mkdir -p $CWD/kmers/bowtie/offtargets
 mkdir -p $CWD/kmers/bowtie/offtargets/logs
 mkdir -p $CWD/MitoIndex
 
+echo "========== filtering pacBio libary by read length =========="
 
-echo "========== generating mitochondrial index =========="
+$SAMTOOLS faidx ${pacDIR}/raw_pac.fasta
+awk -v pl="$pac_length" '{if($2>=pl)print $1}' ${pacDIR}/raw_pac.fasta.fai | xargs samtools faidx ${pacDIR}/raw_pac.fasta > ${pacDIR}/m_pac.fasta
+
+echo "========== filtering for mitochondiral reads =========="
 
 $BOWTIEB $MtREF ${CWD}/MitoIndex/MtRef
 #$BOWITE2B $MtREF $CWD/MitoIndex/MtRef_bowtie2
@@ -98,9 +102,6 @@ sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malemito.bashX > ${CWD}/qsubscripts/m
 	    sleep 10;
 	done;
 
-echo "========== filtering pacBio libary by read length =========="
-$SAMTOOLS faidx ${pacDIR}/raw_pac.fasta
-awk -v pl="$pac_length" '{if($2>=pl)print $1}' ${pacDIR}/raw_pac.fasta.fai | xargs samtools faidx ${pacDIR}/raw_pac.fasta > ${pacDIR}/m_pac.fasta
 
 printf "======= Done step 1 =======\n"
 
