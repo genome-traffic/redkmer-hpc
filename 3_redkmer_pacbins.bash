@@ -1,15 +1,17 @@
 #!/bin/bash
 #PBS -N redkmer3
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=200gb
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=250gb
+#PBS -e /home/nikiwind/reports
+#PBS -o /home/nikiwind/reports
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
 
 printf "======= merge all pacbio mappings  =======\n"
 
-cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq |awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/female_unsort
-cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq |awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/male_unsort
+cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/female_unsort
+cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/male_unsort
 
 time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/female_unsort > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
 time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq

@@ -1,8 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer2
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=100gb
-
+#PBS -l select=1:ncpus=12:mem=64gb:tmpspace=200gb
+#PBS -e /home/nikiwind/reports
+#PBS -o /home/nikiwind/reports
 
 rm -f $CWD/pacBio_illmapping/mapping_rawdata/*
 source $PBS_O_WORKDIR/redkmer.cfg
@@ -41,14 +42,18 @@ for i in $(eval echo "{1..$NODES}")
 	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $pacM > ${pacDIR}/${i}_m_pac.fasta
 
 
-cat > ${CWD}/qsubscripts/malepacbins${i}.bash <<EOF
+cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_mworker
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=850gb
+#PBS -l walltime=08:00:00
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
+#PBS -e /home/nikiwind/reports
+#PBS -o /home/nikiwind/reports
 
 module load bowtie/1.1.1
 #module load bowtie
+module load intel-suite
+
 
 	echo "==================================== Indexing male chunk ${i} ======================================="
 		cp ${pacDIR}/${i}_m_pac.fasta XXXXX
@@ -62,30 +67,29 @@ module load bowtie/1.1.1
 		rm XXXXX/m.fastq
 	echo "==================================== Done male pacbins, sorting for chunck ${i} ===================================="
 		#sort -k1b,1 -T XXXXX XXXXX/male.txt | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/${i}_male_uniq
-
-		split --number=l/$CORES XXXXX/male.txt XXXXX/_sorttmp;
-		rm XXXXX/male.txt
-		ls -1 XXXXX/_sorttmp* | (while read SORTFILE; do sort -k1b,1 -T XXXXX/temp YYYYY -o YYYYY & done;
-		wait
-		)
-		sort -m XXXXX/_sorttmp* | uniq -c > XXXXX/${i}_male_uniq
+		
+		cp ${BASEDIR}/Cscripts/* XXXXX
+		make
+		./count XXXXX/male.txt > XXXXX/${i}_male_uniq
 		cp XXXXX/${i}_male_uniq $CWD/pacBio_illmapping/mapping_rawdata/
 
-	echo "==================================== Done sorting chunk ${i} ! ===================================="
+	echo "==================================== Done male chunk ${i} ! ===================================="
 EOF
 
-	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malepacbins${i}.bash > ${CWD}/qsubscripts/malepacbins${i}.bashX
-	sed 's/YYYYY/$SORTFILE/g' ${CWD}/qsubscripts/malepacbins${i}.bashX > ${CWD}/qsubscripts/malepacbins${i}.bash
+	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malepacbins${i}.bashX > ${CWD}/qsubscripts/malepacbins${i}.bash
 
 
-cat > ${CWD}/qsubscripts/femalepacbins${i}.bash <<EOF
+cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_fworker
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=850gb
+#PBS -l walltime=08:00:00
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
+#PBS -e /home/nikiwind/reports
+#PBS -o /home/nikiwind/reports
 
 module load bowtie/1.1.1
 #module load bowtie
+module load intel-suite
 
 	echo "==================================== Indexing female chunk ${i} ======================================="
 		cp ${pacDIR}/${i}_m_pac.fasta XXXXX
@@ -99,20 +103,16 @@ module load bowtie/1.1.1
 		rm XXXXX/f.fastq
 	echo "==================================== Done female pacbins, sorting ===================================="
 		#sort -k1b,1 -T XXXXX XXXXX/female.txt | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/${i}_female_uniq
-
-		split --number=l/$CORES XXXXX/female.txt XXXXX/_sorttmp;
-		rm XXXXX/female.txt
-		ls -1 XXXXX/_sorttmp* | (while read SORTFILE; do sort -k1b,1 -T XXXXX/temp YYYYY -o YYYYY & done;
-		wait
-		)
-		sort -m XXXXX/_sorttmp* | uniq -c > XXXXX/${i}_female_uniq
+		
+		cp ${BASEDIR}/Cscripts/* XXXXX
+		make
+		./count XXXXX/female.txt > XXXXX/${i}_female_uniq
 		cp XXXXX/${i}_female_uniq $CWD/pacBio_illmapping/mapping_rawdata/
 
-	echo "==================================== Done sorting ! ===================================="
+	echo "==================================== Done female chunk ${i} ! ===================================="
 EOF
 
-	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalepacbins${i}.bash > ${CWD}/qsubscripts/femalepacbins${i}.bashX
-	sed 's/YYYYY/$SORTFILE/g' ${CWD}/qsubscripts/femalepacbins${i}.bashX > ${CWD}/qsubscripts/femalepacbins${i}.bash
+	sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalepacbins${i}.bashX > ${CWD}/qsubscripts/femalepacbins${i}.bash
 
 	ALLMJOBS[${i}]=$(qsub ${CWD}/qsubscripts/malepacbins${i}.bash)
 	ALLFJOBS[${i}]=$(qsub ${CWD}/qsubscripts/femalepacbins${i}.bash)
