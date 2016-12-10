@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer6
-#PBS -l walltime=10:00:00
-#PBS -l select=1:ncpus=24:mem=32gb
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=400gb
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools

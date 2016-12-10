@@ -2,8 +2,6 @@
 #PBS -N redkmer3
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=250gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -17,9 +15,6 @@ time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/ma
 time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
 
 rm $CWD/pacBio_illmapping/mapping_rawdata/*_unsort
-
-#sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
-#sort -m $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | uniq -c > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
 
 printf "======= calculating library sizes =======\n"
 

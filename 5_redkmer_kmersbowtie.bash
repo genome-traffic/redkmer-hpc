@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer5
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=32gb
+#PBS -l walltime=72:00:00
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=300gb
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -39,13 +39,12 @@ printf "======= Creating bowtie index for PacBio bins =======\n"
 	touch $TMPDIR/GAbin.txt
 	fi
 
-printf "======= extracting blast results =======\n"
+printf "======= extracting bowtie results =======\n"
 
 sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $TMPDIR/Xbin.txt | uniq -c  | awk '{print $2, $1}' >  $CWD/kmers/bowtie/mapping/kmer_hits_Xbin
 sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $TMPDIR/Abin.txt | uniq -c  | awk '{print $2, $1}' >  $CWD/kmers/bowtie/mapping/kmer_hits_Abin
 sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $TMPDIR/Ybin.txt | uniq -c  | awk '{print $2, $1}' >  $CWD/kmers/bowtie/mapping/kmer_hits_Ybin
 sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $TMPDIR/GAbin.txt | uniq -c  | awk '{print $2, $1}' >  $CWD/kmers/bowtie/mapping/kmer_hits_GAbin
-
 
 join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $CWD/kmers/bowtie/mapping/kmer_hits_Xbin $CWD/kmers/bowtie/mapping/kmer_hits_Abin > $CWD/kmers/bowtie/mapping/kmer_hits_XAbin
 join -a1 -a2 -1 1 -2 1 -o '0,1.2,1.3,2.2' -e "0" $CWD/kmers/bowtie/mapping/kmer_hits_XAbin $CWD/kmers/bowtie/mapping/kmer_hits_Ybin > $CWD/kmers/bowtie/mapping/kmer_hits_XAYbin
@@ -68,7 +67,6 @@ awk -v xsi="$XSI" '{if ($12>=xsi) {$13="pass"}; print}' $CWD/kmers/rawdata/kmers
 awk -v xsi="$XSI" '{if ($12<xsi) {$13="fail"}; print}' $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_hits_results
 awk '{if ($11==0) {$13="nohits"}; print}' $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_hits_results
 
-
 printf "======= generating Xkmers.fasta file for off-target analysis =======\n"
 
 awk '{if ($13=="pass") print $1, $2}' $CWD/kmers/rawdata/kmers_hits_results | awk '{print ">"$1"\n"$2}' > $CWD/kmers/fasta/Xkmers.fasta
@@ -81,5 +79,3 @@ awk -v OFS="\t" '$1=$1' $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile;
 awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold"} {print}' $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_hits_results
 
 printf "======= done step 5 =======\n"
-
-

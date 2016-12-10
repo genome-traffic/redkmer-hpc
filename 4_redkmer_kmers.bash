@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer4
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=400gb
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -16,8 +16,8 @@ printf "======= using jellyfish to create kmers of lenght 30 from male and femal
 cat > ${CWD}/qsubscripts/femalejelly.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_f_jf
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
 module load jellyfish
 
 cp $illF XXXXX
@@ -34,8 +34,8 @@ sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalejelly.bashX > ${CWD}/qsubscript
 cat > ${CWD}/qsubscripts/malejelly.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_m_jf
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
 module load jellyfish
 
 cp $illM XXXXX
