@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer5
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=300gb
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=600gb
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -58,8 +58,8 @@ awk '{print $0, ($2/$6)}' $CWD/kmers/bowtie/mapping/kmer_hits_bins > $TMPDIR/tmp
 
 printf "======= merging bowtie bin results to kmer_counts data =======\n"
 
-sort -k1b,1 -T $TMPDIR/temp --buffer-size=$BUFFERSIZE $CWD/kmers/bowtie/mapping/kmer_hits_bins > $TMPDIR/tmpfile1; mv $TMPDIR/tmpfile1 $CWD/kmers/bowtie/mapping/kmer_hits_bins
-sort -k1b,1 -T $TMPDIR/temp --buffer-size=$BUFFERSIZE $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile2; mv $TMPDIR/tmpfile2 $CWD/kmers/rawdata/kmers_to_merge
+sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/kmers/bowtie/mapping/kmer_hits_bins > $TMPDIR/tmpfile1; mv $TMPDIR/tmpfile1 $CWD/kmers/bowtie/mapping/kmer_hits_bins
+sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile2; mv $TMPDIR/tmpfile2 $CWD/kmers/rawdata/kmers_to_merge
 
 join -a1 -a2 -1 1 -2 1 -o '0,2.2,2.3,2.4,2.5,2.6,1.2,1.3,1.4,1.5,1.6,1.7' -e "0"  $CWD/kmers/bowtie/mapping/kmer_hits_bins $CWD/kmers/rawdata/kmers_to_merge > $CWD/kmers/rawdata/kmers_hits_results
 awk '{print $0, "0"}'  $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_hits_results 
