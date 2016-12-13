@@ -45,9 +45,11 @@ cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #PBS -N redkmer_mworker
 #PBS -l walltime=08:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=800gb
+#PBS -e /home/nikiwind/
+#PBS -o /home/nikiwind/
 
-module load bowtie/1.1.1
-#module load bowtie
+#module load bowtie/1.1.1
+module load bowtie
 module load intel-suite
 
 
@@ -80,9 +82,11 @@ cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #PBS -N redkmer_fworker
 #PBS -l walltime=08:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=800gb
+#PBS -e /home/nikiwind/
+#PBS -o /home/nikiwind/
 
-module load bowtie/1.1.1
-#module load bowtie
+#module load bowtie/1.1.1
+module load bowtie
 module load intel-suite
 
 	echo "==================================== Indexing female chunk ${i} ======================================="

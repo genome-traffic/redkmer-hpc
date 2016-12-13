@@ -68,22 +68,22 @@ printf "======= merging kmer libraries =======\n"
 join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $CWD/kmers/rawdata/f.sorted $CWD/kmers/rawdata/m.sorted > $CWD/kmers/rawdata/kmers_to_merge
 
 printf "======= removing kmers absent in male library (from seq errors or low read depth) =======\n"
-awk '{if ($3>0) print}' $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
+awk '{if ($3>0) print}' $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
 
 printf "======= creating unique ids for all kmers =======\n"
-awk '{printf("%.1f %s\n", 1+(NR-1), $0)}' $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
-awk '{print "kmer_"$0}' $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
+awk '{printf("%.1f %s\n", 1+(NR-1), $0)}' $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
+awk '{print "kmer_"$0}' $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
 
-sort -k1b,1 $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
+sort -k1b,1 $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
 
 printf "======= normalizing to library sizes =======\n"
-awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, $2, ($3*fema/le), ($4*ma/le)}' $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
+awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, $2, ($3*fema/le), ($4*ma/le)}' $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
 
 printf "======= calculating kmer CQ and sum of kmer occurences in both libraries =======\n"
-awk '{_div1= $4 ? ($3 / $4) : 0 ; print $0, _div1 }' $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
+awk '{_div1= $4 ? ($3 / $4) : 0 ; print $0, _div1 }' $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
 
 #Adding sum
-awk '{print $0, ($3+$4)}' $CWD/kmers/rawdata/kmers_to_merge > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmers_to_merge
+awk '{print $0, ($3+$4)}' $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmers_to_merge
 
 #Replace space with tabs
 awk -v OFS="\t" '$1=$1' $CWD/kmers/rawdata/kmers_to_merge > $CWD/kmers/rawdata/kmer_counts
@@ -91,7 +91,7 @@ awk -v OFS="\t" '$1=$1' $CWD/kmers/rawdata/kmers_to_merge > $CWD/kmers/rawdata/k
 printf "======= generating final kmer_counts file =======\n"
 
 #Add column header
-awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum"} {print}' $CWD/kmers/rawdata/kmer_counts > tmpfile; mv tmpfile $CWD/kmers/rawdata/kmer_counts
+awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum"} {print}' $CWD/kmers/rawdata/kmer_counts > $TMPDIR/tmpfile; mv $TMPDIR/tmpfile $CWD/kmers/rawdata/kmer_counts
 
 printf "======= generating fasta file for next blast =======\n"
 
