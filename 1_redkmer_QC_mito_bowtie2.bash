@@ -49,6 +49,7 @@ $BOWTIE2 -p $CORES -x ${CWD}/MitoIndex/MtRef_bowtie2 -U XXXXX/raw_f.fastq --un X
 cp XXXXX/f.fastq ${illDIR}
 EOF
 sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/femalemito.bashX > ${CWD}/qsubscripts/femalemito.bash
+qsub ${CWD}/qsubscripts/femalemito.bash
 
 cat > ${CWD}/qsubscripts/malemito.bashX <<EOF
 #!/bin/bash
@@ -69,6 +70,7 @@ $BOWTIE2 -p $CORES -x $CWD/MitoIndex/MtRef_bowtie2 -U XXXXX/raw_m.fastq --un XXX
 cp XXXXX/m.fastq ${illDIR}
 EOF
 sed 's/XXXXX/$TMPDIR/g' ${CWD}/qsubscripts/malemito.bashX > ${CWD}/qsubscripts/malemito.bash
+qsub ${CWD}/qsubscripts/malemito.bash
 
 printf "======= Done step 1 =======\n"
 
