@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer2
 #PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=64gb:tmpspace=20gb
+#PBS -l select=1:ncpus=12:mem=32gb:tmpspace=20gb
 #PBS -e /home/nikiwind/reports
 #PBS -o /home/nikiwind/reports
 
@@ -42,7 +42,7 @@ for i in $(eval echo "{1..$NODES}")
 
 cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
-#PBS -N redkmer_mworker
+#PBS -N redk_m_${i}
 #PBS -l walltime=08:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
 #PBS -e ${CWD}
@@ -70,7 +70,7 @@ EOF
 
 cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
-#PBS -N redkmer_fworker
+#PBS -N redk_f_${i}
 #PBS -l walltime=08:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
 #PBS -e ${CWD}
