@@ -1,7 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer3
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=250gb
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
+#PBS -e /home/nikiwind/
+#PBS -o /home/nikiwind/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
@@ -27,22 +29,23 @@ printf "======= merging female and male pacBio_illmapping =======\n"
 join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $CWD/pacBio_illmapping/mapping_rawdata/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/male_uniq > $CWD/pacBio_illmapping/mapping_rawdata/merge
 
 printf "======= normalizing to library size =======\n"
-awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*fema/le), ($3*ma/le)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
+awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*fema/le), ($3*ma/le)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > $TMPDIR/tmpfile_1
 
 printf "======= calculating CQ of pacBIO reads =======\n"
 
-awk '{print $0, (($2+1)/($3+1))}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
+awk '{print $0, (($2+1)/($3+1))}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 
 printf "======= calculating sum of pacBio_illmapping on pacBIO reads =======\n"
 
-awk '{print $0, ($2+$3)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
+awk '{print $0, ($2+$3)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 
 printf "======= calculating LSum (Sum/length of PBreads * median PBread length  =======\n"
 
 rm -f $pacM.fai
 $SAMTOOLS faidx $pacM
 awk '{print $1, $2}' $pacM.fai | sort -k1b,1 > $pacM.lengths
-join -a1 -a2 -1 1 -1 1 -o'0,2.2,1.2,1.3,1.4,1.5' -e "0" $CWD/pacBio_illmapping/mapping_rawdata/merge $pacM.lengths > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
+join -a1 -a2 -1 1 -1 1 -o'0,2.2,1.2,1.3,1.4,1.5' -e "0" $TMPDIR/tmpfile_1 $pacM.lengths > $TMPDIR/tmpfile_2
+
 
 medianlength=$(awk '{print $2}' $pacM.lengths | sort -n | awk '
   BEGIN {
@@ -65,18 +68,17 @@ medianlength=$(awk '{print $2}' $pacM.lengths | sort -n | awk '
   }
 ')
 
-awk -v ml="$medianlength" '{print $0, ($6 / $2 * ml)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
+awk -v ml="$medianlength" '{print $0, ($6 / $2 * ml)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 
 printf "======= filter LSum (LSum>=50)  =======\n"
 
-awk -v ls="$LSum" '{if ($7>=ls) print $0}' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge 
+awk -v ls="$LSum" '{if ($7>=ls) print $0}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 
 # Replace space with tabs
-awk -v OFS="\t" '$1=$1' $CWD/pacBio_illmapping/mapping_rawdata/merge > tmpfile; mv tmpfile $CWD/pacBio_illmapping/mapping_rawdata/merge
+awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/pacBio_illmapping/mapping_rawdata/merge
 
 printf "======= generating pacBio_MappedReads.txt file  =======\n"
 
-# Add column header
 awk 'BEGIN {print "pacbio_read\tbp\tfemale\tmale\tCQ\tSum\tLSum"} {print}' $CWD/pacBio_illmapping/mapping_rawdata/merge > $CWD/pacBio_illmapping/pacBio_MappedReads.txt
 
 printf "======= creating chromosomal bins of pacbio reads =======\n"
