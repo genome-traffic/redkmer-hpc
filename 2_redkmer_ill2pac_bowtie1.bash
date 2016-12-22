@@ -1,9 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer2
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=12:mem=32gb:tmpspace=20gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l walltime=06:00:00
+#PBS -l select=1:ncpus=12:mem=16gb:tmpspace=20gb
+#PBS -e /work/nikiwind/
+#PBS -o /work/nikiwind/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -44,7 +44,7 @@ cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_m_${i}
 #PBS -l walltime=08:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=700gb
 #PBS -e ${CWD}
 #PBS -o ${CWD}
 module load bowtie/1.1.1
@@ -72,9 +72,9 @@ cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_f_${i}
 #PBS -l walltime=08:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
-#PBS -e ${CWD}
-#PBS -o ${CWD}
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=700gb
+#PBS -e ${CWD}/reports
+#PBS -o ${CWD}/reports
 module load bowtie/1.1.1
 module load intel-suite
 
@@ -101,4 +101,4 @@ EOF
 done
 
 echo "==================================== Done step 2! ======================================="
-		
+

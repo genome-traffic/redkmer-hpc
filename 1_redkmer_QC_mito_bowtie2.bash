@@ -1,9 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer1
-#PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=400gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l walltime=08:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -e /work/nikiwind/
+#PBS -o /work/nikiwind/
 
 echo "========== starting up step 1 =========="
 
@@ -15,9 +15,11 @@ echo "========== setting up directories =========="
 
 mkdir -p $CWD/qsubscripts
 mkdir -p $CWD/QualityReports
-mkdir -p $CWD/temp
+#mkdir -p $CWD/temp
 mkdir -p $CWD/plots
 mkdir -p $CWD/MitoIndex
+mkdir -p $CWD/reports
+
 
 echo "========== filtering pacBio libary by read length =========="
 
@@ -33,10 +35,10 @@ echo "========== filtering for mitochondiral reads =========="
 cat > ${CWD}/qsubscripts/femalemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_f_mito
-#PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=400gb
-#PBS -e ${CWD}
-#PBS -o ${CWD}
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -e ${CWD}/reports
+#PBS -o ${CWD}/reports
 
 module load bowtie/2.2.9
 module load fastqc
@@ -54,10 +56,10 @@ qsub ${CWD}/qsubscripts/femalemito.bash
 cat > ${CWD}/qsubscripts/malemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_m_mito
-#PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=400gb
-#PBS -e ${CWD}
-#PBS -o ${CWD}
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -e ${CWD}/reports
+#PBS -o ${CWD}/reports
 
 module load bowtie/2.2.9
 module load fastqc

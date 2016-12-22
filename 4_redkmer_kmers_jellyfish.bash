@@ -1,9 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer4
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=120gb:tmpspace=500gb
+#PBS -e /work/nikiwind/
+#PBS -o /work/nikiwind/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -32,8 +32,8 @@ cat > ${CWD}/qsubscripts/femalejelly.bashX <<EOF
 #PBS -N redk_jelly_f
 #PBS -l walltime=12:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
-#PBS -e ${CWD}
-#PBS -o ${CWD}
+#PBS -e ${CWD}/reports
+#PBS -o ${CWD}/reports
 module load jellyfish
 
 cp $illF XXXXX
@@ -52,8 +52,8 @@ cat > ${CWD}/qsubscripts/malejelly.bashX <<EOF
 #PBS -N redk_jelly_m
 #PBS -l walltime=12:00:00
 #PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
-#PBS -e ${CWD}
-#PBS -o ${CWD}
+#PBS -e ${CWD}/reports
+#PBS -o ${CWD}/reports
 module load jellyfish
 
 cp $illM XXXXX

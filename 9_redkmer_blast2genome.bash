@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N redkmer7
+#PBS -N redkmer9
 #PBS -l walltime=10:00:00
 #PBS -l select=1:ncpus=24:mem=32gb
 

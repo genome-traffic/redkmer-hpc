@@ -53,32 +53,32 @@ for i in $(eval echo "{1..$NODES}")
 cat > ${CWD}/qsubscripts/${i}_${BINNAME}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_${BINNAME}${i}
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=500gb
-#PBS -e /home/nikiwind/
-#PBS -o /home/nikiwind/
-
+#PBS -l walltime=08:00:00
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=500gb
+#PBS -e {CWD}/reports
+#PBS -o {CWD}/reports
 module load bowtie/1.1.1
 module load intel-suite
-	echo "==================================== Indexing ${BINNAME} chunk ${i}  ======================================="
+
+	echo "==================================== Indexing ${BINNAME}, chunk ${i}  ======================================="
 
 		cp $CWD/pacBio_bins/fasta/${i}_${BINNAME}.fasta XXXXXTMPDIR
 		$BOWTIEB -o 3 --large-index XXXXXTMPDIR/${i}_${BINNAME}.fasta XXXXXTMPDIR/${i}_${BINNAME}
 		cp XXXXXTMPDIR/${i}_${BINNAME}* $CWD/kmers/bowtie/index/
 
-	echo "==================================== Working on ${BINNAME} chunk ${i} ======================================="
+	echo "==================================== Aligning ${BINNAME}, chunk ${i} ======================================="
 
 		cp $CWD/kmers/fasta/allkmers.fasta XXXXXTMPDIR
 		$BOWTIE -a -t -p $CORES --large-index -v 0 XXXXXTMPDIR/${i}_${BINNAME} --suppress 2,3,4,5,6,7,8,9 -f XXXXXTMPDIR/allkmers.fasta  1> XXXXXTMPDIR/${BINNAME}.txt 2> $CWD/kmers/bowtie/mapping/logs/${i}_${BINNAME}_log.txt
 
-	echo "==================================== Done ${BINNAME} chunk ${i} ===================================="
+	echo "==================================== Counting ${BINNAME}, chunk ${i} ===================================="
 
 		cp ${BASEDIR}/Cscripts/* XXXXXTMPDIR
 		make
 		./count XXXXXTMPDIR/${BINNAME}.txt > XXXXXTMPDIR/${BINNAME}.counted
 		awk '{print XXXXX2, XXXXX1}' XXXXXTMPDIR/${BINNAME}.counted > $CWD/kmers/bowtie/mapping/${i}_kmer_hits_${BINNAME}
 		
-	echo "==================================== Done counting ${BINNAME} chunk ${i} ===================================="
+	echo "==================================== Done ${BINNAME}, chunk ${i} ===================================="
 EOF
 sed 's/XXXXX/$/g' ${CWD}/qsubscripts/${i}_${BINNAME}.bashX > ${CWD}/qsubscripts/${i}_${BINNAME}.bash
 

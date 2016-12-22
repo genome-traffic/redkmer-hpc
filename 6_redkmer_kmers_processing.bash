@@ -1,9 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer6
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=24:mem=128gb:tmpspace=700gb
-#PBS -e /home/nikiwind/reports
-#PBS -o /home/nikiwind/reports
+#PBS -l walltime=40:00:00
+#PBS -l select=1:ncpus=24:mem=120gb:tmpspace=700gb
+#PBS -e /work/nikiwind/
+#PBS -o /work/nikiwind/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load perl
@@ -45,7 +45,6 @@ printf "======= generating kmers_all_results file =======\n"
 
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 
-#Add column header
 awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold"} {print}' $TMPDIR/tmpfile_1 > $CWD/kmers/rawdata/kmers_hits_results
 
 printf "======= done step 6 =======\n"
