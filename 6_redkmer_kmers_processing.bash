@@ -29,7 +29,7 @@ awk '{print $0, ($2/$6)}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 
 printf "======= merging bowtie bin results to kmer_counts data =======\n"
 
-sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $$TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+sort -k1b,1 -T $TMPDIR --buffer-size=$BUFFERSIZE $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 
 join -a1 -a2 -1 1 -2 1 -o '0,2.2,2.3,2.4,2.5,2.6,1.2,1.3,1.4,1.5,1.6,1.7' -e "0"  $TMPDIR/tmpfile_1 $CWD/kmers/rawdata/kmers_to_merge > $TMPDIR/tmpfile_2
 awk '{print $0, "0"}'  $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1

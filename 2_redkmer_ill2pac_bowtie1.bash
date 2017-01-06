@@ -44,7 +44,7 @@ cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_m_${i}
 #PBS -l walltime=08:00:00
-#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=700gb
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
 #PBS -e ${CWD}
 #PBS -o ${CWD}
 module load bowtie/1.1.1
@@ -72,7 +72,7 @@ cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_f_${i}
 #PBS -l walltime=08:00:00
-#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=700gb
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 module load bowtie/1.1.1
