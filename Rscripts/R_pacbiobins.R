@@ -95,4 +95,20 @@ g10 <-ggplot(pacbio,aes(x=bin,y=log2(LSum)))+
 plot(g10)
 ggsave(paste(Rworkdir,"/plots/plot10_pacBIO_boxplots_Sum.png",sep=""))
 
+g11 <- ggplot() + 
+  geom_point(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin),alpha=0.05,size=0.05)+
+  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
+  theme_bw()+ylim(0,5)
+plot(g11)
+ggsave(paste(Rworkdir,"/plots/plot11_pacBIO_sum_CQ_densities.png",sep=""))
+
+g12 <- ggplot() + 
+  geom_point(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin),alpha=0.1,size=0.1)+
+  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
+  theme_bw()+ylim(0,5)
+plot(g12)
+ggsave(paste(Rworkdir,"/plots/plot12_pacBIO_sum_CQ_densities.png",sep=""))
+
+
+
 
