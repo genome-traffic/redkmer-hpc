@@ -15,7 +15,6 @@ echo "========== setting up directories =========="
 
 mkdir -p $CWD/qsubscripts
 mkdir -p $CWD/QualityReports
-#mkdir -p $CWD/temp
 mkdir -p $CWD/plots
 mkdir -p $CWD/MitoIndex
 mkdir -p $CWD/reports
