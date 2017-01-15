@@ -7,11 +7,11 @@
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
-mkdir $CWD/kmers/dataforplotting
+mkdir -p $CWD/kmers/dataforplotting
 
 printf "======= appending useful data results file for plotting =======\n"
 
-sed '1d' $CWD/kmers/rawdata/kmers_hits_results > $TMPDIR/tmpfile_1
+sed '1d' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_1
 
 #defines "candidate" variable X,A,Y and GA based only on CQ for coloring plots
 awk -v xmin="$xmin" '{if ($5>=xmin) {$17="X"}; print}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
