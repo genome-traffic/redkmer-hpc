@@ -42,7 +42,7 @@ awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\t
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/kmer_results2.txt
 
 awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold\tsum_offtargets\tofftargets\tdegen_targets\tcandidate\tlog10sum\tlabel\tselection"} {print}' $CWD/kmers/candidateXkmers.txt > $TMPDIR/tmpfile_1
-awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_1 > $CWD/kmers/candidateXkmers.txt
+awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/candidateXkmers.txt
 
 
 #make reduced files for plotting
