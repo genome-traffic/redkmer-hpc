@@ -67,12 +67,12 @@ awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_resu
 awk '{print $1, $5, $18, $19}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot5.txt
 
-#plot6 requires id, CQ, log10sum and label 
+#plot6 requires id, CQ, log10sum and selection 
 awk '{print $1, $5, $18, $20}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot6.txt
 
-#plot7 requires id, CQ, log10sum and label 
-awk '{print $1, $15, $13}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+#plot7 requires id, log10sum, offtargets and hits_threshold 
+awk '{print $1, $18, $15, $13}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot7.txt
 
 printf "======= Done step 9! =======\n"
