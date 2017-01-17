@@ -7,7 +7,7 @@ setwd(dirname(Rworkdir))
 
 system.time(kmer<-fread(paste(Rworkdir,"/kmers/dataforplotting/kmer_results_plot4.txt", sep=""), header=T, sep="\t",stringsAsFactors=FALSE))
 
-g4 <- ggplot(kmer) + geom_point(aes(x=log10(sum), y=CQ,color=hits_threshold),alpha=0.8)+
+g4 <- ggplot(kmer) + geom_point(aes(x=log10sum, y=CQ,color=hits_threshold),alpha=0.8)+
   scale_color_manual(values=c("grey","black","red"))+
   ylim(0,5)+
   theme_bw()
