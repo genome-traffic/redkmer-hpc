@@ -39,7 +39,7 @@ awk '{ if ($20=="goodKmers") print $0}' $TMPDIR/tmpfile_1 > $CWD/kmers/candidate
 awk '{print ">"$1"\n"$2}' $CWD/kmers/candidateXkmers.txt > $CWD/kmers/candidateXkmers.fasta
 
 awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold\tsum_offtargets\tofftargets\tdegen_targets\tcandidate\tlog10sum\tlabel\tselection"} {print}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
-awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/kmer_results2.txt
+awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/kmer_results.txt
 
 awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold\tsum_offtargets\tofftargets\tdegen_targets\tcandidate\tlog10sum\tlabel\tselection"} {print}' $CWD/kmers/candidateXkmers.txt > $TMPDIR/tmpfile_1
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_1 > $CWD/kmers/candidateXkmers.txt
@@ -48,31 +48,31 @@ awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_1 > $CWD/kmers/candidateXkmers.txt
 #make reduced files for plotting
 
 #plot1 requires id and CQ
-awk '{print $1, $5}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $5}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 >  $CWD/kmers/dataforplotting/kmer_results_plot1.txt
 
 #plot2 requires id CQ and log10sum
-awk '{print $1, $5, $18}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $5, $18}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot2.txt
 
 #plot3 requires id, CQ, log10sum and candidate 
-awk '{print $1, $5, $17, $18}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $5, $17, $18}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 >$CWD/kmers/dataforplotting/kmer_results_plot3.txt
 
 #plot4 requires id, CQ, log10sum and hits_threshold 
-awk '{print $1, $5, $18, $13}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $5, $18, $13}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot4.txt
 
 #plot5 requires id, CQ, log10sum and label 
-awk '{print $1, $5, $18, $19}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $5, $18, $19}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot5.txt
 
 #plot6 requires id, CQ, log10sum and selection 
-awk '{print $1, $5, $18, $20}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $5, $18, $20}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot6.txt
 
 #plot7 requires id, log10sum, offtargets and hits_threshold 
-awk '{print $1, $18, $15, $13}' $CWD/kmers/kmer_results2.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $18, $15, $13}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot7.txt
 
 printf "======= Done step 9! =======\n"
