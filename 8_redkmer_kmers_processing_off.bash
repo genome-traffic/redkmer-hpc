@@ -13,7 +13,7 @@ module load perl
 printf "======= generating united bins =======\n"
 
 cat $CWD/kmers/bowtie/offtargets/*_kmer_hits_GAbin | awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | sort -k1b,1 > $CWD/kmers/bowtie/offtargets/kmer_hits_GAbin
-cat $CWD/kmers/bowtie/offtargets/*_kmer_hits_Xbin | awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | sort -k1b,1 > $CWD/kmers/bowtie/offtargets/kmer_hits_Xbin
+#cat $CWD/kmers/bowtie/offtargets/*_kmer_hits_Xbin | awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | sort -k1b,1 > $CWD/kmers/bowtie/offtargets/kmer_hits_Xbin
 cat $CWD/kmers/bowtie/offtargets/*_kmer_hits_Ybin | awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | sort -k1b,1 > $CWD/kmers/bowtie/offtargets/kmer_hits_Ybin
 cat $CWD/kmers/bowtie/offtargets/*_kmer_hits_Abin | awk '{arr[$1]+=$2} END {for (i in arr) {print i,arr[i]}}' | sort -k1b,1 > $CWD/kmers/bowtie/offtargets/kmer_hits_Abin
 

@@ -6,13 +6,16 @@ for step in 9xR_plot_kmers_1.bash 9xR_plot_kmers_2.bash 9xR_plot_kmers_3.bash 9x
 
 qsub $step
 
-sleep 5
+done
+
+
+
 while [ $(qstat | wc -l) -gt 2 ]
 do
 	echo "Still some jobs running... "
 	echo $(qstat | wc -l)
 	sleep 60
 done
+
 echo "done step ${step}" | mail -s "Step completed!" "nikolai.windbichler@imperial.ac.uk"
-done 
 echo "all steps done" | mail -s "redkmer completed!" "nikolai.windbichler@imperial.ac.uk"

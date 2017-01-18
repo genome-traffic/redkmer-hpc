@@ -7,7 +7,7 @@
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
-for BINNAME in Abin Xbin Ybin GAbin;
+for BINNAME in Abin Ybin GAbin;
 do
 
 if [ -s "$CWD/pacBio_bins/fasta/${BINNAME}.fasta" ];then
