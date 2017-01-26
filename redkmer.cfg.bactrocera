@@ -8,14 +8,14 @@ printf "======= Running Redkmer =======\n"
 #BASEDIR=/media/nikolai/DATADRIVE1/BioTools/redkmer
 BASEDIR=/work/nikiwind/redkmer-hpc
 
-CWD=/work/nikiwind/redkmerdatasets/pimperena
+CWD=/work/nikiwind/redkmerdatasets/bactrocera
 
 # path to the male pacbio data
-pacDIR=/work/nikiwind/redkmerdatasets/pimperena/reads/pacbio
+pacDIR=/work/nikiwind/redkmerdatasets/bactrocera/reads/pacbio
 pacM=${pacDIR}/m_pac.fasta
 
 # path to the illumina data
-illDIR=/work/nikiwind/redkmerdatasets/pimperena/reads/illumina
+illDIR=/work/nikiwind/redkmerdatasets/bactrocera/reads/illumina
 illM=${illDIR}/m.fastq
 illF=${illDIR}/f.fastq
 
@@ -75,3 +75,4 @@ printf "Obtained run data from ${runfile}\n"
 printf "Working Directory: ${CWD}\n"
 printf "Pacbio Read Directory: ${pacDIR}\n"
 printf "Illumina Read Directory: ${illDIR}\n"
+

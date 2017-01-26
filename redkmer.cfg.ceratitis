@@ -36,7 +36,7 @@ pac_length=2000
 LSum=100
 
 #kmer X chromosome specificity index (0= no specificity; 1= full X specificity; 0.5= half of the kmer hits are on other chromosomes
-XSI=0.9
+XSI=0.995
 
 #Don't consider kmers with count < kmernoise
 kmernoise=5
@@ -49,12 +49,6 @@ xmax=2.5
 
 #define maximum CQ value for Y chromosome reads/kmers = minimum CQ value for autosomal reads/kmers
 ymax=0.3
-
-# Generate redkmer.cfg.R file
-echo "Rworkdir <- \"${CWD}\"" > ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "xmin <-"$xmin"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "xmax <-"$xmax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "ymax <-"$ymax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
 
 #---------------------------------- Machine specific configuration ---------------------------------------------------------------
 

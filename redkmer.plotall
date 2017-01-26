@@ -5,6 +5,7 @@ for step in 9xR_plot_kmers_1.bash 9xR_plot_kmers_2.bash 9xR_plot_kmers_3.bash 9x
 # 3xR_plot_pacbio.bash
 
 qsub $step
+sleep 5
 
 done
 

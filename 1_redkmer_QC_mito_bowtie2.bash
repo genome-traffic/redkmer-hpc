@@ -19,7 +19,6 @@ mkdir -p $CWD/plots
 mkdir -p $CWD/MitoIndex
 mkdir -p $CWD/reports
 
-
 echo "========== filtering pacBio libary by read length =========="
 
 $SAMTOOLS faidx ${pacDIR}/raw_pac.fasta
