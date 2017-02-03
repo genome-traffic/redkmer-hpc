@@ -8,14 +8,14 @@ printf "======= Running Redkmer =======\n"
 #BASEDIR=/media/nikolai/DATADRIVE1/BioTools/redkmer
 BASEDIR=/work/nikiwind/redkmer-hpc
 
-CWD=/work/nikiwind/redkmerdatasets/asembo
+CWD=/work/nikiwind/redkmerdatasets/aegypti
 
 # path to the male pacbio data
-pacDIR=/work/nikiwind/redkmerdatasets/pimperena/reads/pacbio
+pacDIR=/work/nikiwind/redkmerdatasets/aegypti/reads/pacbio
 pacM=${pacDIR}/m_pac.fasta
 
 # path to the illumina data
-illDIR=/work/nikiwind/redkmerdatasets/asembo/reads/illumina
+illDIR=/work/nikiwind/redkmerdatasets/aegypti/reads/illumina
 illM=${illDIR}/m.fastq
 illF=${illDIR}/f.fastq
 
@@ -26,8 +26,8 @@ MtREF=${CWD}/refgenome/M.fasta
 genome=${CWD}/refgenome/MaleGenome.fasta
 
 # bowtie number of bad bases to be ignored at the ends of illumina reads
-TRIMM5=3
-TRIMM3=4
+TRIMM5=5
+TRIMM3=2
 
 # length cuttoff for pacBIO reads to be included in bins
 pac_length=2000
@@ -53,7 +53,7 @@ ymax=0.3
 #---------------------------------- Machine specific configuration ---------------------------------------------------------------
 
 # number of CPUs and memory to use
-NODES=60
+NODES=200
 CORES=24
 BUFFERSIZE=20G
 

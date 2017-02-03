@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N redkmer1
-#PBS -l walltime=08:00:00
+#PBS -l walltime=70:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
@@ -33,8 +33,8 @@ echo "========== filtering for mitochondiral reads =========="
 cat > ${CWD}/qsubscripts/femalemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_f_mito
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=600gb
+#PBS -l walltime=20:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 
@@ -54,8 +54,8 @@ qsub ${CWD}/qsubscripts/femalemito.bash
 cat > ${CWD}/qsubscripts/malemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_m_mito
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=600gb
+#PBS -l walltime=20:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer2
-#PBS -l walltime=06:00:00
-#PBS -l select=1:ncpus=12:mem=16gb:tmpspace=20gb
+#PBS -l walltime=70:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=500gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 
@@ -15,7 +15,8 @@ mkdir -p $CWD/pacBio_bins
 mkdir -p $CWD/pacBio_bins/fasta
 rm -f $CWD/pacBio_illmapping/mapping_rawdata/*
 
-grep -n ">" $pacM |cut -f1 -d: > ${pacDIR}/pacMsplitter
+cp $pacM $TMPDIR
+grep -n ">" $TMPDIR/m_pac.fasta |cut -f1 -d: > ${pacDIR}/pacMsplitter
 READNpacM=$(cat ${pacDIR}/pacMsplitter | echo $((`wc -l`)))
 echo "Total number of reads $READNpacM !"
 
@@ -32,19 +33,19 @@ for i in $(eval echo "{1..$NODES}")
 	
 	if [ "$i" -eq "$NODES" ];
 		then
-		ACTUALEND=$(wc -l $pacM | awk '{print $1}')
+		ACTUALEND=$(wc -l $TMPDIR/m_pac.fasta | awk '{print $1}')
 		ACTUALEND=$(($ACTUALEND+1))
 		echo $ACTUALEND
 	else
 		echo "next.."
 	fi
-	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $pacM > ${pacDIR}/${i}_m_pac.fasta
+	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $TMPDIR/m_pac.fasta > ${pacDIR}/${i}_m_pac.fasta
 
 cat > ${CWD}/qsubscripts/malepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_m_${i}
-#PBS -l walltime=08:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=890gb
 #PBS -e ${CWD}
 #PBS -o ${CWD}
 module load bowtie/1.1.1
@@ -71,8 +72,8 @@ EOF
 cat > ${CWD}/qsubscripts/femalepacbins${i}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_f_${i}
-#PBS -l walltime=08:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
+#PBS -l walltime=12:00:00
+#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=890gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 module load bowtie/1.1.1
