@@ -32,7 +32,7 @@ awk '{print $0, "badKmers"}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 percentile=$(awk '{if ($13=="pass") print $6}' $TMPDIR/tmpfile_2| sort -n | awk '{all[NR] = $0} END{print all[int(NR*0.995 - 0.05)]}')
 
 #appends "goodkmers" to selection column
-awk -v perc="$percentile" -v xmin="$xmin" '{ if( ($6>=perc) && ($5>xmin) && ($13=="pass")) {$20="goodKmers"}; print}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+awk -v perc="$percentile" '{ if( ($6>=perc) && ($17=="X") && ($13=="pass")) {$20="goodKmers"}; print}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 												
 #make candidateXkmers.txt and fasta file
 awk '{ if ($20=="goodKmers") print $0}' $TMPDIR/tmpfile_1 > $CWD/kmers/candidateXkmers.txt
