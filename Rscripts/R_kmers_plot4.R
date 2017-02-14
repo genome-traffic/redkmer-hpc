@@ -12,6 +12,7 @@ summary(kmer$hits_threshold)
 summary(kmer$CQ)
 summary(kmer$log10sum)
 
+kmer <- subset(kmer, kmer$log10sum >= minlog10sum)
 
 g4 <- ggplot(kmer) + geom_point(aes(x=log10sum, y=CQ,color=hits_threshold),alpha=0.05, size=0.2)+
   scale_color_manual(values=c("grey","black","red"))+

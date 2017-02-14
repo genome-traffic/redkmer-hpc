@@ -7,6 +7,8 @@ setwd(dirname(Rworkdir))
 
 system.time(kmer<-fread(paste(Rworkdir,"/kmers/dataforplotting/kmer_results_plot7.txt", sep=""), header=T, sep="\t",stringsAsFactors=FALSE))
 
+kmer <- subset(kmer, kmer$log10sum >= minlog10sum)
+
 g7 <- ggplot(kmer)+
   geom_point(aes(x=log10sum,y=offtargets,color=hits_threshold))+
   theme_bw()

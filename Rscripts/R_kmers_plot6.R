@@ -12,6 +12,8 @@ summary(kmer$selection)
 summary(kmer$CQ)
 summary(kmer$log10sum)
 
+kmer <- subset(kmer, kmer$log10sum >= minlog10sum)
+
 g6 <- ggplot(kmer) + geom_point(aes(x=log10sum, y=CQ, color=selection),alpha=0.05, size=0.2)+
   scale_color_manual(values=c("grey","red2"))+
   ylim(0,5)+

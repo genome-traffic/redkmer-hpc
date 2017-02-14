@@ -21,8 +21,10 @@ mkdir -p $CWD/reports
 
 echo "========== filtering pacBio libary by read length =========="
 
-$SAMTOOLS faidx ${pacDIR}/raw_pac.fasta
-awk -v pl="$pac_length" '{if($2>=pl)print $1}' ${pacDIR}/raw_pac.fasta.fai | xargs samtools faidx ${pacDIR}/raw_pac.fasta > ${pacDIR}/m_pac.fasta
+cp ${pacDIR}/raw_pac.fasta $TMPDIR
+$SAMTOOLS faidx $TMPDIR/raw_pac.fasta
+awk -v pl="$pac_length" -v plm="$pac_length_max" '{if($2>=pl && $2<=plm)print $1}' $TMPDIR/raw_pac.fasta.fai | xargs samtools faidx $TMPDIR/raw_pac.fasta > $TMPDIR/m_pac.fasta
+cp $TMPDIR/m_pac.fasta ${pacDIR}/m_pac.fasta
 
 echo "========== building mitochondiral index =========="
 

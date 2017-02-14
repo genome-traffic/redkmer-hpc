@@ -14,10 +14,10 @@ printf "======= appending useful data results file for plotting =======\n"
 sed '1d' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_1
 
 #defines "candidate" variable X,A,Y and GA based only on CQ for coloring plots
-awk -v xmin="$xmin" '{if ($5>=xmin) {$17="X"}; print}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
-awk -v xmin="$xmin" '{if ($5<xmin) {$17="A"}; print}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
-awk -v ymax="$ymax" '{if ($5<ymax) {$17="Y"}; print}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
-awk -v xmax="$xmax" '{if ($5>xmax) {$17="GA"}; print}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+awk -v xmin="$kmer_xmin" '{if ($5>=xmin) {$17="X"}; print}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
+awk -v xmin="$kmer_xmin" '{if ($5<xmin) {$17="A"}; print}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+awk -v ymax="$kmer_ymax" '{if ($5<ymax) {$17="Y"}; print}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
+awk -v xmax="$kmer_xmax" '{if ($5>xmax) {$17="GA"}; print}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 
 #calculates and appends log10(sum)
 awk '{print $0, (log($6)/log(10))}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
