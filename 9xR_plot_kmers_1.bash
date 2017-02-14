@@ -9,18 +9,9 @@ module purge
 module load R
 
 source $PBS_O_WORKDIR/redkmer.cfg
-
-# Generate redkmer.cfg.R file
-echo "Rworkdir <- \"${CWD}\"" > ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "xmin <-"$xmin"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "xmax <-"$xmax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "ymax <-"$ymax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-
 export R_LIBS="/home/nikiwind/localRlibs"
 
 cd $PBS_O_WORKDIR/Rscripts/
+R CMD BATCH --no-save --no-restore R_kmers_plot1.R > ${CWD}/reports/R_kmers_plot1.Rout
 
-R CMD BATCH --no-save --no-restore R_kmers_plot1.R
-
-
-
+cp $PBS_O_WORKDIR/Rscripts/R_kmers_plot1.Rout ${CWD}/reports/

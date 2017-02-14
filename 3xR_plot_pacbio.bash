@@ -9,15 +9,8 @@ module purge
 module load R
 
 source $PBS_O_WORKDIR/redkmer.cfg
-
-# Generate redkmer.cfg.R file
-echo "Rworkdir <- \"${CWD}\"" > ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "xmin <-"$xmin"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "xmax <-"$xmax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-echo "ymax <-"$ymax"" >> ${BASEDIR}/Rscripts/redkmer.cfg.R
-
 cd $PBS_O_WORKDIR/Rscripts/
 
-R CMD BATCH --no-save --no-restore R_pacbiobins.R
+R CMD BATCH --no-save --no-restore R_pacbiobins.R > ${CWD}/reports/R_pacbiobins.Rout
 
 
