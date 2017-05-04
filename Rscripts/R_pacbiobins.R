@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 library (ggplot2)
+library(MASS)
 source("redkmer.cfg.R")
 setwd(dirname(Rworkdir))
 
@@ -108,6 +109,11 @@ g12 <- ggplot() +
   theme_bw()+ylim(0,5)
 plot(g12)
 ggsave(paste(Rworkdir,"/plots/plot12_pacBIO_sum_CQ_densities.png",sep=""))
+
+g13 <- ggplot(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin)) + ylim(0,5) + geom_point(alpha=0.025,size=0.025) +
+  stat_density2d(geom="contour", bins=10)
+plot(g13)
+ggsave(paste(Rworkdir,"/plots/plot13_pacBIO_sum_CQ_densities.png",sep=""))
 
 
 

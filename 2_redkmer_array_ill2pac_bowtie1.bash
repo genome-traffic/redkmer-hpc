@@ -17,36 +17,36 @@ mkdir -p $CWD/pacBio_bins/fasta
 
 echo "==================================== Generating pacBio data chunks ======================================="
 
-#cp $pacM $TMPDIR
-#grep -n ">" $TMPDIR/m_pac.fasta |cut -f1 -d: > ${pacDIR}/pacMsplitter
-#READNpacM=$(cat ${pacDIR}/pacMsplitter | echo $((`wc -l`)))
-#echo "Total number of reads $READNpacM !"
-#
-#READNUNIT=$(((($READNpacM))/$NODES))
-#READSTART=1
-#READEND=$READNUNIT
-#	
-#for i in $(eval echo "{1..$NODES}")
-#	do
-#   	echo "Align chunk $i (out of $NODES) from read $READSTART to read $READEND !"
-#	
-#	ACTUALSTART=$(sed -n "$READSTART"p ${pacDIR}/pacMsplitter)
-#	ACTUALEND=$(sed -n "$READEND"p ${pacDIR}/pacMsplitter)
-#	
-#	if [ "$i" -eq "$NODES" ];
-#		then
-#		ACTUALEND=$(wc -l $TMPDIR/m_pac.fasta | awk '{print $1}')
-#		ACTUALEND=$(($ACTUALEND+1))
-#		echo $ACTUALEND
-#	else
-#		echo "next.."
-#	fi
-#	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $TMPDIR/m_pac.fasta > ${pacDIR}/${i}_m_pac.fasta
-#
-#	READSTART=$(($READSTART + $READNUNIT))
-#	READEND=$(($READEND + $READNUNIT))
-#
-#done
+cp $pacM $TMPDIR
+grep -n ">" $TMPDIR/m_pac.fasta |cut -f1 -d: > ${pacDIR}/pacMsplitter
+READNpacM=$(cat ${pacDIR}/pacMsplitter | echo $((`wc -l`)))
+echo "Total number of reads $READNpacM !"
+
+READNUNIT=$(((($READNpacM))/$NODES))
+READSTART=1
+READEND=$READNUNIT
+	
+for i in $(eval echo "{1..$NODES}")
+	do
+   	echo "Align chunk $i (out of $NODES) from read $READSTART to read $READEND !"
+	
+	ACTUALSTART=$(sed -n "$READSTART"p ${pacDIR}/pacMsplitter)
+	ACTUALEND=$(sed -n "$READEND"p ${pacDIR}/pacMsplitter)
+	
+	if [ "$i" -eq "$NODES" ];
+		then
+		ACTUALEND=$(wc -l $TMPDIR/m_pac.fasta | awk '{print $1}')
+		ACTUALEND=$(($ACTUALEND+1))
+		echo $ACTUALEND
+	else
+		echo "next.."
+	fi
+	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $TMPDIR/m_pac.fasta > ${pacDIR}/${i}_m_pac.fasta
+
+	READSTART=$(($READSTART + $READNUNIT))
+	READEND=$(($READEND + $READNUNIT))
+
+done
 
 echo "==================================== Done step 2A! ======================================="
 
@@ -57,7 +57,7 @@ cat > ${CWD}/qsubscripts/pacbins.bashX <<EOF
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=890gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
-#PBS -J 326-${NODES}
+#PBS -J 1-${NODES}
 
 source $PBS_O_WORKDIR/redkmer.cfg
 

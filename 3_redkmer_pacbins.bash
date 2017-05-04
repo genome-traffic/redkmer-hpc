@@ -13,8 +13,10 @@ printf "======= merge all pacbio mappings  =======\n"
 cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/female_unsort
 cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/male_unsort
 
-time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/female_unsort > $CWD/pacBio_illmapping/mapping_rawdata/female_uniq
-time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $CWD/pacBio_illmapping/mapping_rawdata/male_uniq
+time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/female_unsort > $TMPDIR/female_uniq
+cp $TMPDIR/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/
+time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $TMPDIR/male_uniq
+cp $TMPDIR/male_uniq $CWD/pacBio_illmapping/mapping_rawdata/
 
 rm $CWD/pacBio_illmapping/mapping_rawdata/*_unsort
 
@@ -24,12 +26,20 @@ illLIBMsize=$(wc -l $illM | awk '{print ($1/4)}')
 illLIBFsize=$(wc -l $illF | awk '{print ($1/4)}')
 illnorm=$((($illLIBMsize+$illLIBFsize)/2))
 
+printf " Male: "
+printf '%s\n' "$illLIBMsize"
+printf " Female: "
+printf '%s\n' "$illLIBFsize"
+printf " Normfactor: "
+printf '%s\n' "$illnorm"
+
 printf "======= merging female and male pacBio_illmapping =======\n"
 
-join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $CWD/pacBio_illmapping/mapping_rawdata/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/male_uniq > $CWD/pacBio_illmapping/mapping_rawdata/merge
+join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $TMPDIR/female_uniq $TMPDIR/male_uniq > $TMPDIR/merge
 
 printf "======= normalizing to library size =======\n"
-awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*fema/le), ($3*ma/le)}' $CWD/pacBio_illmapping/mapping_rawdata/merge > $TMPDIR/tmpfile_1
+awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*fema/le), ($3*ma/le)}' $TMPDIR/merge > $TMPDIR/tmpfile_1
+cp $TMPDIR/tmpfile_1 $CWD/pacBio_illmapping/mapping_rawdata
 
 printf "======= calculating CQ of pacBIO reads =======\n"
 
@@ -37,14 +47,14 @@ awk '{print $0, (($2+1)/($3+1))}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 
 printf "======= calculating sum of pacBio_illmapping on pacBIO reads =======\n"
 
-awk '{print $0, ($2+$3)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+awk '{print $0, ($2+$3)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_3
 
 printf "======= calculating LSum (Sum/length of PBreads * median PBread length  =======\n"
 
 rm -f $pacM.fai
 $SAMTOOLS faidx $pacM
 awk '{print $1, $2}' $pacM.fai | sort -k1b,1 > $pacM.lengths
-join -a1 -a2 -1 1 -1 1 -o'0,2.2,1.2,1.3,1.4,1.5' -e "0" $TMPDIR/tmpfile_1 $pacM.lengths > $TMPDIR/tmpfile_2
+join -a1 -a2 -1 1 -1 1 -o'0,2.2,1.2,1.3,1.4,1.5' -e "0" $TMPDIR/tmpfile_3 $pacM.lengths > $TMPDIR/tmpfile_4
 
 
 medianlength=$(awk '{print $2}' $pacM.lengths | sort -n | awk '
@@ -68,14 +78,14 @@ medianlength=$(awk '{print $2}' $pacM.lengths | sort -n | awk '
   }
 ')
 
-awk -v ml="$medianlength" '{print $0, ($6 / $2 * ml)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+awk -v ml="$medianlength" '{print $0, ($6 / $2 * ml)}' $TMPDIR/tmpfile_4 > $TMPDIR/tmpfile_5
 
 printf "======= filter LSum (LSum>=50)  =======\n"
 
-awk -v ls="$LSum" '{if ($7>=ls) print $0}' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
+awk -v ls="$LSum" '{if ($7>=ls) print $0}' $TMPDIR/tmpfile_5 > $TMPDIR/tmpfile_6
 
 # Replace space with tabs
-awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/pacBio_illmapping/mapping_rawdata/merge
+awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_6 > $CWD/pacBio_illmapping/mapping_rawdata/merge
 
 printf "======= generating pacBio_MappedReads.txt file  =======\n"
 
