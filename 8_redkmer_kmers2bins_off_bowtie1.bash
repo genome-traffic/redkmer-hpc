@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N redkmer7
+#PBS -N redkmer8
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=16gb:tmpspace=5gb
 #PBS -e /work/nikiwind/
@@ -62,4 +62,4 @@ qsub ${CWD}/qsubscripts/off_${i}_${BINNAME}.bash
 done
 done
 
-printf "======= done step 7 =======\n"
+printf "======= done step 8 =======\n"
