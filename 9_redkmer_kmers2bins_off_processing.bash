@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N redkmer8
+#PBS -N redkmer9
 #PBS -l walltime=40:00:00
 #PBS -l select=1:ncpus=24:mem=120gb:tmpspace=600gb
 #PBS -e /work/nikiwind/
@@ -31,5 +31,5 @@ awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 
 awk 'BEGIN {print "kmer_id\tseq\tfemale\tmale\tCQ\tsum\thits_X\thits_A\thits_Y\thits_GA\thits_sum\tperchitsX\thits_threshold\tsum_offtargets\tofftargets\tdegen_targets"} {print}' $TMPDIR/tmpfile_2 > $CWD/kmers/kmer_results.txt
 
-printf "======= done step 8 =======\n"
+printf "======= done step 9 =======\n"
 
