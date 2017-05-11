@@ -1,9 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer5
-#PBS -l walltime=02:00:00
+#PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=16gb:tmpspace=5gb
-#PBS -e /work/nikiwind/
-#PBS -o /work/nikiwind/
+#PBS -e /work/ppapatha/
+#PBS -o /work/ppapatha/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -53,7 +53,7 @@ for i in $(eval echo "{1..$NODES}")
 cat > ${CWD}/qsubscripts/${i}_${BINNAME}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_${BINNAME}${i}
-#PBS -l walltime=08:00:00
+#PBS -l walltime=12:00:00
 #PBS -l select=1:ncpus=24:mem=64gb:tmpspace=500gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports

@@ -2,8 +2,8 @@
 #PBS -N redkmer4
 #PBS -l walltime=24:00:00
 #PBS -l select=1:ncpus=24:mem=120gb:tmpspace=500gb
-#PBS -e /work/nikiwind/
-#PBS -o /work/nikiwind/
+#PBS -e /work/ppapatha/
+#PBS -o /work/ppapatha/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -94,7 +94,7 @@ awk '{print "kmer_"$0}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 sort -k1b,1 $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2
 
 printf "======= normalizing to library sizes =======\n"
-awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, $2, ($3*fema/le), ($4*ma/le)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
+awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, $2, ($3*le/fema), ($4*le/ma)}' $TMPDIR/tmpfile_2 > $TMPDIR/tmpfile_1
 
 printf "======= calculating kmer CQ and sum of kmer occurences in both libraries =======\n"
 awk '{_div1= $4 ? ($3 / $4) : 0 ; print $0, _div1 }' $TMPDIR/tmpfile_1 > $TMPDIR/tmpfile_2

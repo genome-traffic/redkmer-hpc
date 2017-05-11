@@ -2,23 +2,26 @@
 #PBS -N redkmer3
 #PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=120gb:tmpspace=650gb
-#PBS -e /work/nikiwind/
-#PBS -o /work/nikiwind/
+#PBS -e /work/ppapatha/
+#PBS -o /work/ppapatha/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 module load samtools
 
 printf "======= merge all pacbio mappings  =======\n"
 
-cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/female_unsort
-cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/male_unsort
+# cat $CWD/pacBio_illmapping/mapping_rawdata/*_female_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/female_unsort
+# cat $CWD/pacBio_illmapping/mapping_rawdata/*_male_uniq | awk '{print $2, $1}'> $CWD/pacBio_illmapping/mapping_rawdata/male_unsort
+# 
+# time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/female_unsort > $TMPDIR/female_uniq
+# cp $TMPDIR/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/
+# time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $TMPDIR/male_uniq
+# cp $TMPDIR/male_uniq $CWD/pacBio_illmapping/mapping_rawdata/
+# 
+# rm $CWD/pacBio_illmapping/mapping_rawdata/*_unsort
 
-time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/female_unsort > $TMPDIR/female_uniq
-cp $TMPDIR/female_uniq $CWD/pacBio_illmapping/mapping_rawdata/
-time sort -k1b,1  -T $TMPDIR --buffer-size=$BUFFERSIZE $CWD/pacBio_illmapping/mapping_rawdata/male_unsort > $TMPDIR/male_uniq
-cp $TMPDIR/male_uniq $CWD/pacBio_illmapping/mapping_rawdata/
-
-rm $CWD/pacBio_illmapping/mapping_rawdata/*_unsort
+cp  $CWD/pacBio_illmapping/mapping_rawdata/male_uniq $TMPDIR/
+cp  $CWD/pacBio_illmapping/mapping_rawdata/female_uniq $TMPDIR/
 
 printf "======= calculating library sizes =======\n"
 
@@ -38,7 +41,7 @@ printf "======= merging female and male pacBio_illmapping =======\n"
 join -a1 -a2 -1 1 -2 1 -o '0,1.2,2.2' -e "0" $TMPDIR/female_uniq $TMPDIR/male_uniq > $TMPDIR/merge
 
 printf "======= normalizing to library size =======\n"
-awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*fema/le), ($3*ma/le)}' $TMPDIR/merge > $TMPDIR/tmpfile_1
+awk -v ma="$illLIBMsize" -v fema="$illLIBFsize" -v le="$illnorm" '{print $1, ($2*le/fema), ($3*le/ma)}' $TMPDIR/merge > $TMPDIR/tmpfile_1
 cp $TMPDIR/tmpfile_1 $CWD/pacBio_illmapping/mapping_rawdata
 
 printf "======= calculating CQ of pacBIO reads =======\n"
