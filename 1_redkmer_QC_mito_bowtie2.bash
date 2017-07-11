@@ -2,8 +2,8 @@
 #PBS -N redkmer1
 #PBS -l walltime=70:00:00
 #PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
-#PBS -e /work/ppapatha/
-#PBS -o /work/ppapatha/
+#PBS -e /work/nikiwind/
+#PBS -o /work/nikiwind/
 
 echo "========== starting up step 1 =========="
 

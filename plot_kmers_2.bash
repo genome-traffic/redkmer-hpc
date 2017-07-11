@@ -2,8 +2,8 @@
 #PBS -N redkmer9R_2
 #PBS -l walltime=48:00:00
 #PBS -l select=1:ncpus=1:mem=250gb:tmpspace=500gb
-#PBS -e /work/ppapatha/
-#PBS -o /work/ppapatha/
+#PBS -e /work/nikiwind/
+#PBS -o /work/nikiwind/
 
 module purge
 module load R
