@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer2
-#PBS -l walltime=2:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
+#PBS -l walltime=04:00:00
+#PBS -l select=1:ncpus=12:mem=32gb:tmpspace=700gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 
@@ -53,8 +53,8 @@ echo "==================================== Done step 2A! =======================
 cat > ${CWD}/qsubscripts/pacbins.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer2B
-#PBS -l walltime=10:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=890gb
+#PBS -l walltime=18:00:00
+#PBS -l select=1:ncpus=12:mem=32gb:tmpspace=890gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 #PBS -J 1-${NODES}
@@ -73,7 +73,7 @@ module load intel-suite
 
 	echo "==================================== Working on male chunk XXXXX{PBS_ARRAY_INDEX} ======================================="
 		cp $illM XXXXXTMPDIR
-		$BOWTIE -a -t -5 ${TRIMM5} -3 ${TRIMM3} -p $CORES -v 0 XXXXXTMPDIR/XXXXX{PBS_ARRAY_INDEX}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXXTMPDIR/m.fastq 1> XXXXXTMPDIR/male.txt 2> $CWD/pacBio_illmapping/logs/XXXXX{PBS_ARRAY_INDEX}_male_log.txt
+		$BOWTIE -a -t -5 ${TRIMM5} -3 ${TRIMM3} -p $ARRAYCORES -v 0 XXXXXTMPDIR/XXXXX{PBS_ARRAY_INDEX}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXXTMPDIR/m.fastq 1> XXXXXTMPDIR/male.txt 2> $CWD/pacBio_illmapping/logs/XXXXX{PBS_ARRAY_INDEX}_male_log.txt
 		rm XXXXXTMPDIR/m.fastq
 	echo "==================================== Counting, sorting for male chunck XXXXX{PBS_ARRAY_INDEX} ===================================="
 		./count XXXXXTMPDIR/male.txt > XXXXXTMPDIR/XXXXX{PBS_ARRAY_INDEX}_male_uniq
@@ -83,7 +83,7 @@ module load intel-suite
 
 	echo "==================================== Working on female chunk XXXXX{PBS_ARRAY_INDEX} ======================================="
 		cp $illF XXXXXTMPDIR
-		$BOWTIE -a -t -5 ${TRIMM5} -3 ${TRIMM3} -p $CORES -v 0 XXXXXTMPDIR/XXXXX{PBS_ARRAY_INDEX}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXXTMPDIR/f.fastq 1> XXXXXTMPDIR/female.txt 2> $CWD/pacBio_illmapping/logs/XXXXX{PBS_ARRAY_INDEX}_female_log.txt
+		$BOWTIE -a -t -5 ${TRIMM5} -3 ${TRIMM3} -p $ARRAYCORES -v 0 XXXXXTMPDIR/XXXXX{PBS_ARRAY_INDEX}_m_pac --suppress 1,2,4,5,6,7,8,9 XXXXXTMPDIR/f.fastq 1> XXXXXTMPDIR/female.txt 2> $CWD/pacBio_illmapping/logs/XXXXX{PBS_ARRAY_INDEX}_female_log.txt
 		rm XXXXXTMPDIR/f.fastq
 	echo "==================================== Counting, sorting for male chunck XXXXX{PBS_ARRAY_INDEX} ===================================="
 		./count XXXXXTMPDIR/female.txt > XXXXXTMPDIR/XXXXX{PBS_ARRAY_INDEX}_female_uniq
