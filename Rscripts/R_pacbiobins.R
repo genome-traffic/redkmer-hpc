@@ -17,57 +17,48 @@ summary(pacbio$LSum)
 summary(pacbio$bp)
 
 # make some plots
-g1 <- ggplot(pacbio) + geom_point(aes(x=Sum, y=CQ,color=bin),alpha=0.8)+
-  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
-  theme_bw()
+
+g1 <- ggplot() + 
+  geom_point(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin),alpha=0.1,size=0.2)+
+  scale_color_manual(name="", values=c("springgreen4","black","red2","dodgerblue2"), labels=c("A-bin", "GA-bin", "X-bin", "Y-bin" ))+
+  guides(color = guide_legend(override.aes = list(size=5,alpha=1)))+
+  theme_bw(base_size=21)+
+  theme(legend.position="top")+
+  scale_y_continuous(name = "CQ", limits=c(0,5))+
+  scale_x_continuous(name = "log10(LSum)")
 plot(g1)
-ggsave(paste(Rworkdir,"/plots/plot1_pacBIO_sum_CQ.png",sep=""))
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_1.png",sep=""),width=13, height=13)
 
-g2 <- ggplot(pacbio) + geom_point(aes(x=log10(Sum), y=log2(CQ),color=bin),alpha=0.4)+
-  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
-  theme_bw()
+g2<- ggplot(pacbio)+geom_histogram(aes(x=CQ),binwidth = 0.05)+
+  theme_bw(base_size=21)+
+  scale_y_continuous(name = "number of long reads")+
+  scale_x_continuous(name = "CQ", limits=c(0,5))
 plot(g2)
-ggsave(paste(Rworkdir,"/plots/plot2_pacBIO_sum_CQ.png",sep=""))
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_2.png",sep=""),width=13, height=13)
 
-g3 <- ggplot(pacbio) + geom_point(aes(x=log10(LSum), y=log2(CQ),color=bin),alpha=0.4)+
-  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
-  theme_bw()
-plot(g3)
-ggsave(paste(Rworkdir,"/plots/plot3_pacBIO_LSum_CQ.png",sep=""))
+g3<- ggplot(pacbio)+
+  geom_histogram(aes(x=log10(Sum)),binwidth = 0.1)+
+  theme_bw(base_size=21)+
+  scale_y_continuous(name = "number of long reads")+
+  scale_x_continuous(name = "log10(Sum)")
+  plot(g3)
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_3.png",sep=""),width=13, height=13)
 
-g4<- ggplot(pacbio)+geom_histogram(aes(x=CQ),binwidth = 0.05)+
-  xlim(0,5)+
-  theme_bw()
+g4<- ggplot(pacbio)+
+  geom_histogram(aes(x=log10(LSum)),binwidth = 0.1)+
+  theme_bw(base_size=21)+
+  scale_y_continuous(name = "number of long reads")+
+  scale_x_continuous(name = "log10(LSum)")
 plot(g4)
-ggsave(paste(Rworkdir,"/plots/plot4_pacBIO_CQ.png",sep=""))
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_4.png",sep=""),width=13, height=13)
 
 g5<- ggplot(pacbio)+
-  geom_histogram(aes(x=log10(Sum)),binwidth = 0.1)+
-  theme_bw()
-plot(g5)
-ggsave(paste(Rworkdir,"/plots/plot5_pacBIO_log10Sum.png",sep=""))
-
-g6<- ggplot(pacbio)+
-  geom_histogram(aes(x=log10(LSum)),binwidth = 0.1)+
-  theme_bw()
-plot(g6)
-ggsave(paste(Rworkdir,"/plots/plot6_pacBIO_log10LSum.png",sep=""))
-
-g7<- ggplot(pacbio)+
   geom_histogram(aes(x=bp),binwidth = 100)+
-  theme_bw()
-plot(g7)
-ggsave(paste(Rworkdir,"/plots/plot7_pacBIO_readlength.png",sep=""))
-
-g8 <- ggplot() + 
-  geom_point(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin),alpha=0.8)+
-  geom_density(data=subset(pacbio,pacbio$bin=="X"),aes(x=log10(LSum)),size=2,color="brown")+
-  geom_density(data=subset(pacbio,pacbio$bin=="A"),aes(x=log10(LSum)),size=2,color="black")+
-  geom_density(data=subset(pacbio,pacbio$bin=="Y"),aes(x=log10(LSum)),size=2,color="blue")+
-  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
-  theme_bw()+ylim(0,5)
-plot(g8)
-ggsave(paste(Rworkdir,"/plots/plot8_pacBIO_sum_CQ_densities.png",sep=""))
+  theme_bw(base_size=21)+
+  scale_y_continuous(name = "number of long reads")+
+  scale_x_continuous(name = "length in bp")
+plot(g5)
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_5.png",sep=""),width=13, height=13)
 
 # function for mean labels
 mean.n <- function(x){
@@ -75,45 +66,35 @@ mean.n <- function(x){
   # experiment with the multiplier to find the perfect position
 } 
 
-g9 <-ggplot(pacbio,aes(x=bin,y=(LSum)))+
-  geom_boxplot(aes(fill=bin))+
-  stat_summary(fun.data = mean.n, geom = "text", fun.y = median)+
-  scale_fill_manual(values=c("springgreen4","white","red2","dodgerblue2"))
-plot(g9)
-ggsave(paste(Rworkdir,"/plots/plot9_pacBIO_boxplots_Sum.png",sep=""))
-
-
 # function for mean labels
 mean.n <- function(x){
   return(c(y = -2, label = round(median(x),2))) 
   # experiment with the multiplier to find the perfect position
 }  
 
-g10 <-ggplot(pacbio,aes(x=bin,y=log2(LSum)))+
+g6 <-ggplot(pacbio,aes(x=bin,y=log2(LSum)))+
   geom_boxplot(aes(fill=bin))+
-  stat_summary(fun.data = mean.n, geom = "text", fun.y = median)+
-  scale_fill_manual(values=c("springgreen4","white","red2","dodgerblue2"))
-plot(g10)
-ggsave(paste(Rworkdir,"/plots/plot10_pacBIO_boxplots_Sum.png",sep=""))
+  stat_summary(fun.data = mean.n, geom = "text", fun.y = median,size=10)+
+  scale_fill_manual(name="", values=c("springgreen4","black","red2","dodgerblue2"), labels=c("A-bin", "GA-bin", "X-bin", "Y-bin" ))+
+  theme_bw(base_size=21)+
+  theme(legend.position="top")+
+  scale_y_continuous(name = "log2(LSum)")+
+  scale_x_discrete(name = "Chromosomal Bin")+
+  guides(color = guide_legend(override.aes = list(size=8,alpha=1)))
+plot(g6)
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_6.png",sep=""),width=13, height=13)
 
-g11 <- ggplot() + 
-  geom_point(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin),alpha=0.05,size=0.05)+
-  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
-  theme_bw()+ylim(0,5)
-plot(g11)
-ggsave(paste(Rworkdir,"/plots/plot11_pacBIO_sum_CQ_densities.png",sep=""))
-
-g12 <- ggplot() + 
-  geom_point(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin),alpha=0.1,size=0.1)+
-  scale_color_manual(values=c("springgreen4","black","red2","dodgerblue2"))+
-  theme_bw()+ylim(0,5)
-plot(g12)
-ggsave(paste(Rworkdir,"/plots/plot12_pacBIO_sum_CQ_densities.png",sep=""))
-
-g13 <- ggplot(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin)) + ylim(0,5) + geom_point(alpha=0.025,size=0.025) +
-  stat_density2d(geom="contour", bins=10)
-plot(g13)
-ggsave(paste(Rworkdir,"/plots/plot13_pacBIO_sum_CQ_densities.png",sep=""))
+g7 <- ggplot(data=pacbio,aes(x=log10(LSum), y=CQ,color=bin))+ylim(0,5)+
+	geom_point(alpha=0.025,size=0.1) +
+	stat_density2d(aes(group = bin),geom="contour", bins=10,color="black",line=0.5)+
+    scale_color_manual(name="", values=c("springgreen4","black","red2","dodgerblue2"), labels=c("A-bin", "GA-bin", "X-bin", "Y-bin" ))+
+    theme_bw(base_size=21)+
+    theme(legend.position="top")+
+  guides(color = guide_legend(override.aes = list(size=5,alpha=1)))+
+  	scale_y_continuous(name = "CQ", limits=c(0,5))+
+    scale_x_continuous(name = "log10(LSum)")
+plot(g7)
+ggsave(paste(Rworkdir,"/plots/redkmer_plot_reads_7.png",sep=""),width=13, height=13)
 
 
 
