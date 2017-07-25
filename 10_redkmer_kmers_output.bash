@@ -1,9 +1,9 @@
 #!/bin/bash
 #PBS -N redkmer10
 #PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=24:mem=120gb:tmpspace=600gb
-#PBS -e /work/nikiwind/
-#PBS -o /work/nikiwind/
+#PBS -l select=1:ncpus=12:mem=120gb:tmpspace=600gb
+#PBS -e /work/ppapatha/
+#PBS -o /work/ppapatha/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
@@ -72,8 +72,8 @@ awk '{print $1, $5, $18, $20}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot6.txt
 
 #plot7 requires id, log10sum, offtargets and hits_threshold 
-awk '{print $1, $18, $15, $13}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
+awk '{print $1, $11, $18, $20}' $CWD/kmers/kmer_results.txt > $TMPDIR/tmpfile_2
 awk -v OFS="\t" '$1=$1' $TMPDIR/tmpfile_2 > $CWD/kmers/dataforplotting/kmer_results_plot7.txt
 
-printf "======= Done step 9! =======\n"
+printf "======= Done step 10! =======\n"
 
