@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N redkmer3R
+#PBS -N redk_plotpac
 #PBS -l walltime=12:00:00
 #PBS -l select=1:ncpus=1:mem=250gb:tmpspace=500gb
 #PBS -e /work/nikiwind/
