@@ -2,8 +2,8 @@
 #PBS -N redkmer5
 #PBS -l walltime=24:00:00
 #PBS -l select=1:ncpus=12:mem=120gb:tmpspace=500gb
-#PBS -e /work/nikiwind/
-#PBS -o /work/nikiwind/
+#PBS -e /work/ppapatha/
+#PBS -o /work/ppapatha/
 
 source $PBS_O_WORKDIR/redkmer.cfg
 
