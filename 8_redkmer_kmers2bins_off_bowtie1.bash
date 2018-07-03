@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer8
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=16:mem=16gb:tmpspace=5gb
+#PBS -l select=1:ncpus=8:mem=16gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 
@@ -32,7 +32,7 @@ cat > ${CWD}/qsubscripts/off_${i}_${BINNAME}.bashX <<EOF
 #!/bin/bash
 #PBS -N redk_o_${BINNAME}${i}
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=16:mem=62gb:tmpspace=500gb
+#PBS -l select=1:ncpus=32:mem=62gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 module load bowtie/1.1.1

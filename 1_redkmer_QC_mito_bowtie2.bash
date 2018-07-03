@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer1
-#PBS -l walltime=70:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=400gb
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=16:mem=62gb:tmpspace=400gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 
@@ -21,10 +21,10 @@ mkdir -p $CWD/reports
 
 echo "========== filtering pacBio libary by read length =========="
 
-cp ${pacDIR}/raw_pac.fasta $TMPDIR
-$SAMTOOLS faidx $TMPDIR/raw_pac.fasta
-awk -v pl="$pac_length" -v plm="$pac_length_max" '{if($2>=pl && $2<=plm)print $1}' $TMPDIR/raw_pac.fasta.fai | xargs samtools faidx $TMPDIR/raw_pac.fasta > $TMPDIR/m_pac.fasta
-cp $TMPDIR/m_pac.fasta ${pacDIR}/m_pac.fasta
+#cp ${pacDIR}/raw_pac.fasta $TMPDIR
+#$SAMTOOLS faidx $TMPDIR/raw_pac.fasta
+#awk -v pl="$pac_length" -v plm="$pac_length_max" '{if($2>=pl && $2<=plm)print $1}' $TMPDIR/raw_pac.fasta.fai | xargs samtools faidx $TMPDIR/raw_pac.fasta > $TMPDIR/m_pac.fasta
+#cp $TMPDIR/m_pac.fasta ${pacDIR}/m_pac.fasta
 
 echo "========== building mitochondiral index =========="
 
@@ -35,8 +35,8 @@ echo "========== filtering for mitochondiral reads =========="
 cat > ${CWD}/qsubscripts/femalemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_f_mito
-#PBS -l walltime=20:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=700gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 
@@ -56,8 +56,8 @@ qsub ${CWD}/qsubscripts/femalemito.bash
 cat > ${CWD}/qsubscripts/malemito.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer_m_mito
-#PBS -l walltime=20:00:00
-#PBS -l select=1:ncpus=24:mem=32gb:tmpspace=700gb
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=24:mem=64gb:tmpspace=700gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 

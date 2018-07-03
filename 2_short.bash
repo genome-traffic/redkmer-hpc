@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer2
-#PBS -l walltime=72:00:00
-#PBS -l select=1:ncpus=16:mem=62gb:tmpspace=700gb
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=16:mem=62gb:tmpspace=200gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 
@@ -15,46 +15,11 @@ mkdir -p $CWD/pacBio_bins
 mkdir -p $CWD/pacBio_bins/fasta
 #rm -f $CWD/pacBio_illmapping/mapping_rawdata/*
 
-echo "==================================== Generating pacBio data chunks ======================================="
-
-cp $pacM $TMPDIR
-grep -n ">" $TMPDIR/m_pac.fasta |cut -f1 -d: > ${pacDIR}/pacMsplitter
-READNpacM=$(cat ${pacDIR}/pacMsplitter | echo $((`wc -l`)))
-echo "Total number of reads $READNpacM !"
-
-READNUNIT=$(((($READNpacM))/$NODES))
-READSTART=1
-READEND=$READNUNIT
-	
-for i in $(eval echo "{1..$NODES}")
-	do
-   	echo "Align chunk $i (out of $NODES) from read $READSTART to read $READEND !"
-	
-	ACTUALSTART=$(sed -n "$READSTART"p ${pacDIR}/pacMsplitter)
-	ACTUALEND=$(sed -n "$READEND"p ${pacDIR}/pacMsplitter)
-	
-	if [ "$i" -eq "$NODES" ];
-		then
-		ACTUALEND=$(wc -l $TMPDIR/m_pac.fasta | awk '{print $1}')
-		ACTUALEND=$(($ACTUALEND+1))
-		echo $ACTUALEND
-	else
-		echo "next.."
-	fi
-	sed -n "$ACTUALSTART,$(($ACTUALEND-1))"p $TMPDIR/m_pac.fasta > ${pacDIR}/${i}_m_pac.fasta
-
-	READSTART=$(($READSTART + $READNUNIT))
-	READEND=$(($READEND + $READNUNIT))
-
-done
-
-echo "==================================== Done step 2A! ======================================="
-
 cat > ${CWD}/qsubscripts/pacbins.bashX <<EOF
 #!/bin/bash
 #PBS -N redkmer2B
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=16:mem=62gb:tmpspace=900gb
+#PBS -l select=1:ncpus=16:mem=62gb:tmpspace=920gb
 #PBS -e ${CWD}/reports
 #PBS -o ${CWD}/reports
 #PBS -J 1-${NODES}

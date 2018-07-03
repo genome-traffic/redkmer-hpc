@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redk_plotpac
-#PBS -l walltime=12:00:00
-#PBS -l select=1:ncpus=12:mem=250gb:tmpspace=500gb
+#PBS -l walltime=24:00:00
+#PBS -l select=1:ncpus=32:mem=120gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 

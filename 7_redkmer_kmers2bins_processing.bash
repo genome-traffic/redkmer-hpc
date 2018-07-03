@@ -1,7 +1,7 @@
 #!/bin/bash
 #PBS -N redkmer7
 #PBS -l walltime=24:00:00
-#PBS -l select=1:ncpus=24:mem=120gb:tmpspace=700gb
+#PBS -l select=1:ncpus=32:mem=120gb
 #PBS -e /work/nikiwind/
 #PBS -o /work/nikiwind/
 
